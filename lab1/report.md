@@ -42,4 +42,4 @@ if id ex me wb
 branch在EX段跳转。branch命中后需要控制flush信号来清空跳转后的ID和EX段。
 
 ## 12
-会产生影响。涉及到x0寄存器时就不需要forward（恒为0）
+会产生影响。涉及到x0寄存器时就不需要forward（x0恒为0）
