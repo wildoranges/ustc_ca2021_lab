@@ -80,6 +80,16 @@ begin
                     AluContrlD <= `SUB;
                     ImmType <= `RTYPE;
                 end
+                default:begin
+                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+                    RAluSrc2D <= 2'b00;
+                    RegWriteD <= `NOREGWRITE;//32bit
+                    MemWriteD <= 4'b0000;//32bit
+                    RegReadD <= 2'b00;//2regs
+                    BranchTypeD <= `NOBRANCH;
+                    AluContrlD <= 4'd11;
+                    ImmType <= `RTYPE;
+                end
             endcase
         end 
         endcase
