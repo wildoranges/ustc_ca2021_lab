@@ -26,9 +26,66 @@ module BranchDecisionMaking(
     input wire [2:0] BranchTypeE,
     input wire [31:0] Operand1,Operand2,
     output reg BranchE
-    );
-    
-    // 请补全此处代码
+);
+always @(*) 
+begin
+    case (BranchTypeE)    
+    `NOBRANCH:  BranchE <= 0;
+    `BEQ:   begin
+        if(Operand1==Operand2)
+            BranchE <= 1;
+        else
+            BranchE <= 0;
+    end
+    `BNE:   begin
+        if(Operand1!=Operand2)
+            BranchE <= 1;
+        else
+            BranchE <= 0; 
+    end
+    `BLT:   begin
+        case({Operand1[31],Operand2[31]})
+        2'b01:
+            BranchE <= 0;
+        2'b10:
+            BranchE <= 1;
+        default:begin
+            if(Operand1 < Operand2)
+                BranchE <= 1;
+            else
+                BranchE <= 0;
+        end
+        endcase
+    end
+    `BLTU:  begin
+        if(Operand1 < Operand2)
+            BranchE <= 1;
+        else
+            BranchE <= 0;
+    end
+    `BGE:   begin
+        case({Operand1[31],Operand2[31]})
+        2'b01:
+            BranchE <= 1;
+        2'b10:
+            BranchE <= 0;
+        default:begin
+            if(Operand1 >= Operand2)
+                BranchE <= 1;
+            else
+                BranchE <= 0;
+        end
+        endcase
+    end
+    `BGEU:  begin
+        if(Operand1 >= Operand2)
+            BranchE <= 1;
+        else
+            BranchE <= 0;
+    end
+    default:BranchE <= 0;
+    endcase
+end
 
 endmodule
 
