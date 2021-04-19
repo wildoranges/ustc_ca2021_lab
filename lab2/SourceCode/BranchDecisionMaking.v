@@ -30,60 +30,60 @@ module BranchDecisionMaking(
 always @(*) 
 begin
     case (BranchTypeE)    
-    `NOBRANCH:  BranchE <= 0;
+    `NOBRANCH:  BranchE <= 1'b0;
     `BEQ:   begin
         if(Operand1==Operand2)
-            BranchE <= 1;
+            BranchE <= 1'b1;
         else
-            BranchE <= 0;
+            BranchE <= 1'b0;
     end
     `BNE:   begin
         if(Operand1!=Operand2)
-            BranchE <= 1;
+            BranchE <= 1'b1;
         else
-            BranchE <= 0; 
+            BranchE <= 1'b0; 
     end
     `BLT:   begin
         case({Operand1[31],Operand2[31]})
         2'b01:
-            BranchE <= 0;
+            BranchE <= 1'b0;
         2'b10:
-            BranchE <= 1;
+            BranchE <= 1'b1;
         default:begin
             if(Operand1 < Operand2)
-                BranchE <= 1;
+                BranchE <= 1'b1;
             else
-                BranchE <= 0;
+                BranchE <= 1'b0;
         end
         endcase
     end
     `BLTU:  begin
         if(Operand1 < Operand2)
-            BranchE <= 1;
+            BranchE <= 1'b1;
         else
-            BranchE <= 0;
+            BranchE <= 1'b0;
     end
     `BGE:   begin
         case({Operand1[31],Operand2[31]})
         2'b01:
-            BranchE <= 1;
+            BranchE <= 1'b1;
         2'b10:
-            BranchE <= 0;
+            BranchE <= 1'b0;
         default:begin
             if(Operand1 >= Operand2)
-                BranchE <= 1;
+                BranchE <= 1'b1;
             else
-                BranchE <= 0;
+                BranchE <= 1'b0;
         end
         endcase
     end
     `BGEU:  begin
         if(Operand1 >= Operand2)
-            BranchE <= 1;
+            BranchE <= 1'b1;
         else
-            BranchE <= 0;
+            BranchE <= 1'b0;
     end
-    default:BranchE <= 0;
+    default:BranchE <= 1'b0;
     endcase
 end
 

@@ -69,7 +69,7 @@ begin
             endcase
         end
         `LUI:   AluOut <= {Operand2[31:12],12'd0};
-        default:    ALUout <= 32'h0000_0000;
+        default:    ALUout <= 32'hxxxxxxxx;
     endcase
 end
 endmodule
