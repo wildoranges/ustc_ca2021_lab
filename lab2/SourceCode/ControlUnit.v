@@ -49,8 +49,44 @@ module ControlUnit(
     output wire AluSrc1D,
     output reg [2:0] ImmType        
     ); 
-    
-    // 请补全此处代码
+reg RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D;
+reg [1:0] RAluSrc2D;
+assign {JalD,JalrD,MemToRegD,LoadNpcD,AluSrc1D} = {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D};
+assign AluSrc2D = RAluSrc2D;
+always @(*) 
+begin
+    case(Op)
+    7'b0110011:begin//Rtype
+        case(Fn3)
+        3'b000:begin
+            case(Fn7)//add
+                7'b0000000:begin
+                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+                    RAluSrc2D <= 2'b00;
+                    RegWriteD <= `LW;//32bit
+                    MemWriteD <= 4'b0000;//32bit
+                    RegReadD <= 2'b11;//2regs
+                    BranchTypeD <= `NOBRANCH;
+                    AluContrlD <= `ADD;
+                    ImmType <= `RTYPE;
+                end
+                7'b0100000:begin
+                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+                    RAluSrc2D <= 2'b00;
+                    RegWriteD <= `LW;//32bit
+                    MemWriteD <= 4'b0000;//32bit
+                    RegReadD <= 2'b11;//2regs
+                    BranchTypeD <= `NOBRANCH;
+                    AluContrlD <= `SUB;
+                    ImmType <= `RTYPE;
+                end
+            endcase
+        end 
+        endcase
+    end
+    default:{JalD}
+    endcase    
+end
 
 endmodule
 
