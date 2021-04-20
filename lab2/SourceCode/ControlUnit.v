@@ -272,6 +272,30 @@ begin
             endcase                
         end
     end
+    7'b0100011:begin//stype
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+        RAluSrc2D <= 2'b10;//imm
+        BranchTypeD <= `NOBRANCH;
+        //MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `NOREGWRITE;//32bit
+        RegReadD <= 2'b11;//rs1 rs2
+        ImmType <= `STYPE;
+        AluContrlD <= `ADD;
+        case(Fn3)
+        3'b000:begin//store byte
+            MemWriteD <= 4'b0001;
+        end
+        3'b001:begin//store half word
+            MemWriteD <= 4'b0011;
+        end
+        3'b010:begin//store word
+            MemWriteD <= 4'b1111;
+        end
+        default:begin
+            MemWriteD <= 4'b0000;
+        end
+        endcase
+    end
     default:
     endcase    
 end
