@@ -28,9 +28,82 @@ module DataExt(
     input wire [1:0] LoadedBytesSelect,
     input wire [2:0] RegWriteW,
     output reg [31:0] OUT
-    );    
-        
-    // 请补全此处代码
-
+    );        
+always@(*)
+begin
+    case(RegWriteW)
+    `LB:begin
+        case(LoadedBytesSelect)
+        2'b00:begin
+            OUT <= {{24{IN[7]}},IN[7:0]};
+        end
+        2'b01:begin
+            OUT <= {{24{IN[15]}},IN[15:8]};
+        end
+        2'b10:begin
+            OUT <= {{24{IN[23]}},IN[23:16]};
+        end
+        2'b11:begin
+            OUT <= {{24{IN[31]}},IN[31:24]};
+        end
+        endcase
+    end
+    `LBU:begin
+        case(LoadedBytesSelect)
+        2'b00:begin
+            OUT <= {{24'b0},IN[7:0]};
+        end
+        2'b01:begin
+            OUT <= {{24'b0},IN[15:8]};
+        end
+        2'b10:begin
+            OUT <= {{24'b0},IN[23:16]};
+        end
+        2'b11:begin
+            OUT <= {{24'b0},IN[31:24]};
+        end
+        default:OUT <= {{24'b0},IN[7:0]};
+        endcase
+    end
+    `LH:begin
+        case(LoadedBytesSelect)
+        2'b00:begin
+            OUT <= {{16{IN[15]}},IN[15:0]};
+        end
+        2'b01:begin
+            OUT <= {{16{IN[23]}},IN[23:8]};
+        end
+        2'b10:begin
+            OUT <= {{16{IN[31]}},IN[31:16]};
+        end
+        default:begin
+            OUT <= {{16{IN[15]}},IN[15:0]};
+        end
+        endcase
+    end
+    `LHU:begin
+        case(LoadedBytesSelect)
+        2'b00:begin
+            OUT <= {{16'b0},IN[15:0]};
+        end
+        2'b01:begin
+            OUT <= {{16'b0},IN[23:8]};
+        end
+        2'b10:begin
+            OUT <= {{16'b0},IN[31:16]};
+        end
+        default:begin
+            OUT <= {{16'b0},IN[15:0]};
+        end
+        endcase
+    end
+    `LW:begin
+        OUT <= IN;
+    end
+    default:begin
+        OUT <= IN;
+    end
+    endcase 
+end
 endmodule
 
