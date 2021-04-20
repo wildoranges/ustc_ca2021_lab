@@ -332,6 +332,26 @@ begin
         end
         endcase
     end
+    7'b1100111:begin//jalr
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b01010;
+        RAluSrc2D <= 2'b10;//imm
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `LW;//32bit
+        RegReadD <= 2'b10;//rs1
+        ImmType <= `ITYPE;
+        AluContrlD <= `ADD;
+    end
+    7'b1101111:begin//jal
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b10010;
+        RAluSrc2D <= 2'b00;//no rs2
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `LW;//32bit
+        RegReadD <= 2'b00;//
+        ImmType <= `JTYPE;
+        AluContrlD <= 4'd11;
+    end
     default:
     endcase    
 end
