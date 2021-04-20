@@ -296,6 +296,42 @@ begin
         end
         endcase
     end
+    7'b0000011:begin//load
+        
+    end
+    7'b1100011:begin//branch
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+        RAluSrc2D <= 2'b00;
+        //BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `NOREGWRITE;//32bit
+        RegReadD <= 2'b11;//rs1 rs2
+        ImmType <= `BTYPE;
+        AluContrlD <= 4'd11;
+        case(Fn3)
+        3'b000:begin
+            BranchTypeD <= `BEQ;
+        end
+        3'b001:begin
+            BranchTypeD <= `BNE;
+        end
+        3'b100:begin
+            BranchTypeD <= `BLT;
+        end
+        3'b101:begin
+            BranchTypeD <= `BGE;
+        end
+        3'b110:begin
+            BranchTypeD <= `BLTU;
+        end
+        3'b111:begin
+            BranchTypeD <= `BGEU;
+        end
+        default:begin
+            BranchTypeD <= `NOBRANCH;
+        end
+        endcase
+    end
     default:
     endcase    
 end
