@@ -47,13 +47,7 @@ begin
                 AluOut <= 32'd0;
         end
         `SLT:      begin
-            case ({Operand1[31],Operand2[31]})
-                /*2'b00:begin
-                    if(Operand1 < Operand2)
-                        AluOut <= 32'd1;
-                    else
-                        AluOut <= 32'd0;
-                end*/
+            /*case ({Operand1[31],Operand2[31]})
                 2'b01:begin
                     AluOut <= 32'd0;
                 end
@@ -66,7 +60,11 @@ begin
                     else
                         AluOut <= 32'd0; 
                 end
-            endcase
+            endcase*/
+            if($signed(Operand1) < $signed(Operand2))
+                    AluOut <= 32'd1;
+            else
+                    AluOut <= 32'd0;
         end
         `LUI:   AluOut <= {Operand2[31:12],12'd0};
         default:    ALUout <= 32'hxxxxxxxx;

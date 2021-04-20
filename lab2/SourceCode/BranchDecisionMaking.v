@@ -44,7 +44,7 @@ begin
             BranchE <= 1'b0; 
     end
     `BLT:   begin
-        case({Operand1[31],Operand2[31]})
+        /*case({Operand1[31],Operand2[31]})
         2'b01:
             BranchE <= 1'b0;
         2'b10:
@@ -55,7 +55,11 @@ begin
             else
                 BranchE <= 1'b0;
         end
-        endcase
+        endcase*/
+        if($signed(Operand1) < $signed(Operand2))
+            BranchE <= 1'b1;
+        else
+            BranchE <= 1'b0;
     end
     `BLTU:  begin
         if(Operand1 < Operand2)
@@ -64,7 +68,7 @@ begin
             BranchE <= 1'b0;
     end
     `BGE:   begin
-        case({Operand1[31],Operand2[31]})
+        /*case({Operand1[31],Operand2[31]})
         2'b01:
             BranchE <= 1'b1;
         2'b10:
@@ -75,7 +79,11 @@ begin
             else
                 BranchE <= 1'b0;
         end
-        endcase
+        endcase*/
+        if($signed(Operand1) >= $signed(Operand2))
+            BranchE <= 1'b1;
+        else
+            BranchE <= 1'b0;
     end
     `BGEU:  begin
         if(Operand1 >= Operand2)
