@@ -57,44 +57,222 @@ always @(*)
 begin
     case(Op)
     7'b0110011:begin//Rtype
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+        RAluSrc2D <= 2'b00;
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        ImmType <= `RTYPE;
         case(Fn3)
         3'b000:begin
-            case(Fn7)//add
-                7'b0000000:begin
-                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
-                    RAluSrc2D <= 2'b00;
-                    RegWriteD <= `LW;//32bit
-                    MemWriteD <= 4'b0000;//32bit
-                    RegReadD <= 2'b11;//2regs
-                    BranchTypeD <= `NOBRANCH;
-                    AluContrlD <= `ADD;
-                    ImmType <= `RTYPE;
-                end
-                7'b0100000:begin
-                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
-                    RAluSrc2D <= 2'b00;
-                    RegWriteD <= `LW;//32bit
-                    MemWriteD <= 4'b0000;//32bit
-                    RegReadD <= 2'b11;//2regs
-                    BranchTypeD <= `NOBRANCH;
-                    AluContrlD <= `SUB;
-                    ImmType <= `RTYPE;
-                end
-                default:begin
-                    {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
-                    RAluSrc2D <= 2'b00;
-                    RegWriteD <= `NOREGWRITE;//32bit
-                    MemWriteD <= 4'b0000;//32bit
-                    RegReadD <= 2'b00;//2regs
-                    BranchTypeD <= `NOBRANCH;
-                    AluContrlD <= 4'd11;
-                    ImmType <= `RTYPE;
-                end
+            case(Fn7)
+            7'b0000000:begin//ADD
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `ADD;
+            end
+            7'b0100000:begin//SUB
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SUB;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
             endcase
         end 
+        3'b001:begin
+            case(Fn7)
+            7'b0000000:begin//SLL
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SLL;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b010:begin
+            case(Fn7)
+            7'b0000000:begin//SLT
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SLT;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b011:begin
+            case(Fn7)
+            7'b0000000:begin//SLTU
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SLTU;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b100:begin
+            case(Fn7)
+            7'b0000000:begin//XOR
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `XOR;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b101:begin
+            case(Fn7)
+            7'b0000000:begin//SRL
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SRL;
+            end
+            7'b0100000:begin//SRA
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `SRA;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b110:begin
+            case(Fn7)
+            7'b0000000:begin//OR
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `OR;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        3'b111:begin
+            case(Fn7)
+            7'b0000000:begin//AND
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b11;//2regs
+                AluContrlD <= `AND;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//2regs
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        default:begin
+            RegWriteD <= `NOREGWRITE;//32bit
+            RegReadD <= 2'b00;//
+            AluContrlD <= 4'd11;
+        end
         endcase
     end
-    default:{JalD}
+    7'b0010011:begin//Itype
+        if(Fn3==3'b001)
+        begin
+            {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+            RAluSrc2D <= 2'b01;
+            BranchTypeD <= `NOBRANCH;
+            MemWriteD <= 4'b0000;//32bit
+            ImmType <= `RTYPE;
+            case(Fn7)
+            7'b0000000:begin//SLLI
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b10;//
+                AluContrlD <= `SLL;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        else if(Fn3==3'b101)
+        begin
+            {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+            RAluSrc2D <= 2'b01;
+            BranchTypeD <= `NOBRANCH;
+            MemWriteD <= 4'b0000;//32bit
+            ImmType <= `RTYPE;
+            case(Fn7)
+            7'b0000000:begin//SRLI
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b10;//
+                AluContrlD <= `SRL;
+            end
+            7'b0100000:begin//SRAI
+                RegWriteD <= `LW;//32bit
+                RegReadD <= 2'b10;//
+                AluContrlD <= `SRA;
+            end
+            default:begin
+                RegWriteD <= `NOREGWRITE;//32bit
+                RegReadD <= 2'b00;//
+                AluContrlD <= 4'd11;
+            end
+            endcase
+        end
+        else
+        begin
+            {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+            RAluSrc2D <= 2'b10;
+            BranchTypeD <= `NOBRANCH;
+            MemWriteD <= 4'b0000;//32bit
+            RegWriteD <= `LW;//32bit
+            RegReadD <= 2'b10;//rs1
+            ImmType <= `ITYPE;
+            case(Fn3)
+            3'b000:begin//ADDI
+                AluContrlD <= `ADD;
+            end
+            3'b010:begin
+                AluContrlD <= `SLT;
+            end
+            3'b011:begin
+                AluContrlD <= `SLTU;
+            end
+            3'b100:begin
+                AluContrlD <= `XOR;
+            end
+            3'b110:begin
+                AluContrlD <= `OR;
+            end
+            3'b111:begin
+                AluContrlD <= `AND;
+            end
+            default:begin
+                AluContrlD <= 4'd11;
+            end
+            endcase                
+        end
+    end
+    default:
     endcase    
 end
 
