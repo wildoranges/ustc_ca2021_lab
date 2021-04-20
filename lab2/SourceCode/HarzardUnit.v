@@ -36,9 +36,14 @@ module HarzardUnit(
     input wire [2:0] RegWriteM, RegWriteW,
     output reg StallF, FlushF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW,
     output reg [1:0] Forward1E, Forward2E
-    );
+);
     
-    // 请补全此处代码
+always@(*)
+begin
+    {StallF, FlushF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW} <= 10'd0;
+    Forward1E <= 2'b00;
+    Forward2E <= 2'b00;
+end
 
 endmodule
 
