@@ -297,7 +297,32 @@ begin
         endcase
     end
     7'b0000011:begin//load
-        
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00100;
+        RAluSrc2D <= 2'b10;//imm
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        //RegWriteD <= `NOREGWRITE;//32bit
+        RegReadD <= 2'b10;//rs1
+        ImmType <= `ITYPE;
+        AluContrlD <= `ADD;
+        case(Fn3)
+        3'b000:begin//load byte
+            RegWriteD <= `LB;
+        end
+        3'b001:begin
+            RegWriteD <= `LH;
+        end
+        3'b010:begin
+            RegWriteD <= `LW;
+        end
+        3'b100:begin
+            RegWriteD <= `LBU;
+        end
+        3'b101:begin
+            RegWriteD <= `LHU;
+        end
+        default:RegWriteD <= `NOREGWRITE;
+        endcase
     end
     7'b1100011:begin//branch
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
