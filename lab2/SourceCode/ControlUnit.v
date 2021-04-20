@@ -352,7 +352,36 @@ begin
         ImmType <= `JTYPE;
         AluContrlD <= 4'd11;
     end
-    default:
+    7'b0010111:begin//AUIPC
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00001;
+        RAluSrc2D <= 2'b10;//imm
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `LW;//32bit
+        RegReadD <= 2'b00;//
+        ImmType <= `UTYPE;
+        AluContrlD <= `ADD;
+    end
+    7'b0110111:begin
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+        RAluSrc2D <= 2'b10;//imm
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `LW;//32bit
+        RegReadD <= 2'b00;//
+        ImmType <= `UTYPE;
+        AluContrlD <= `LUI;
+    end
+    default:begin
+        {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
+        RAluSrc2D <= 2'b00;
+        BranchTypeD <= `NOBRANCH;
+        MemWriteD <= 4'b0000;//32bit
+        RegWriteD <= `NOREGWRITE;//32bit
+        RegReadD <= 2'b00;//
+        ImmType <= `RTYPE;
+        AluContrlD <= 4'd11;
+    end
     endcase    
 end
 
