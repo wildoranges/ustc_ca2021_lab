@@ -36,6 +36,11 @@ _start:
     nop
     nop
     nop
+    srli x2,x2,0xc
+    nop
+    nop
+    nop
+    nop
     sll x3,x1,x2
     nop
     nop
@@ -47,11 +52,6 @@ _start:
     nop
     nop
     lui x1,0x4
-    nop
-    nop
-    nop
-    nop
-    lui x2,0x2
     nop
     nop
     nop
@@ -77,6 +77,11 @@ _start:
     nop
     nop
     lui x2,0x1
+    nop
+    nop
+    nop
+    nop
+    srli x2,x2,0xc
     nop
     nop
     nop
