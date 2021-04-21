@@ -10,10 +10,10 @@
 // Description: ALU unit of RISCV CPU
 //////////////////////////////////////////////////////////////////////////////////
 
-//功能和接口说明
+//功能和接口说�?
 	//ALU接受两个操作数，根据AluContrl的不同，进行不同的计算操作，将计算结果输出到AluOut
-	//AluContrl的类型定义在Parameters.v中
-//推荐格式：
+	//AluContrl的类型定义在Parameters.v�?
+//推荐格式�?
     //case()
     //    `ADD:        AluOut<=Operand1 + Operand2; 
     //   	.......
@@ -67,7 +67,7 @@ begin
                     AluOut <= 32'd0;
         end
         `LUI:   AluOut <= {Operand2[31:12],12'd0};
-        default:    ALUout <= 32'hxxxxxxxx;
+        default:    AluOut <= 32'hxxxxxxxx;
     endcase
 end
 endmodule

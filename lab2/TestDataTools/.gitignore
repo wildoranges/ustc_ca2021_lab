@@ -1,0 +1,7 @@
+*.data
+*.inst
+*.txt
+*.o
+*.om
+*.bin
+Bin2Data
