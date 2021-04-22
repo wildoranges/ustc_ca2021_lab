@@ -146,4 +146,9 @@ _start:
     nop
     nop
     nop
+    auipc x3,0x1
+    nop
+    nop
+    nop
+    nop
     

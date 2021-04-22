@@ -150,3 +150,8 @@ Disassembly of section .text:
    1028c:	00000013          	nop
    10290:	00000013          	nop
    10294:	00000013          	nop
+   10298:	00001197          	auipc	gp,0x1
+   1029c:	00000013          	nop
+   102a0:	00000013          	nop
+   102a4:	00000013          	nop
+   102a8:	00000013          	nop
