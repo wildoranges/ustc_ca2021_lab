@@ -34,7 +34,7 @@ begin
     case (AluContrl)
         `SLL:       AluOut <= Operand1 <<  Operand2;
         `SRL:       AluOut <= Operand1 >>  Operand2;
-        `SRA:       AluOut <= Operand1 >>> Operand2;
+        `SRA:       AluOut <= ($signed(Operand1)) >>> Operand2;
         `ADD:       AluOut <= Operand1  +  Operand2;
         `SUB:       AluOut <= Operand1  -  Operand2;
         `XOR:       AluOut <= Operand1  ^  Operand2;
