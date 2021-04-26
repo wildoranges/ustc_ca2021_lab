@@ -13,8 +13,8 @@
 // !!! ALL YOU NEED TO CHANGE IS 4 FILE PATH BELOW !!!	
 //				(they are all optional, you can run cpu without change paths here,if files are failed to open, we will not dump the content to .txt and will not try to initial your bram)
 //////////////////////////////////////////////////////////////////////////////////
-`define DataRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\test1.data"           //修改此处为测试数据路�?
-`define InstRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\test1.inst"           //修改此处为测试数据路�?
+`define DataRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.data"           //修改此处为测试数据路�?
+`define InstRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.inst"           //修改此处为测试数据路�?
 `define DataRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\DataRamContent.txt"      //修改此处为测试数据路�?
 `define InstRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\InstRamContent.txt"      //修改此处为测试数据路�?
 `define BRAMWORDS 4096  //a word is 32bit, so our bram is 4096*32bit

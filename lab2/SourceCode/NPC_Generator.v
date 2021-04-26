@@ -10,9 +10,9 @@
 // Description: Choose Next PC value
 //////////////////////////////////////////////////////////////////////////////////
 //功能说明
-    //NPC_Generator是用来生成Next PC值的模块，根据不同的跳转信号选择不同的新PC值
+    //NPC_Generator是用来生成Next PC值的模块，根据不同的跳转信号选择不同的新PC�?
 //输入
-    //PCF              旧的PC值
+    //PCF              旧的PC�?
     //JalrTarget       jalr指令的对应的跳转目标
     //BranchTarget     branch指令的对应的跳转目标
     //JalTarget        jal指令的对应的跳转目标
@@ -20,7 +20,7 @@
     //JalD==1          ID阶段的Jal指令确定跳转
     //JalrE==1         Ex阶段的Jalr指令确定跳转
 //输出
-    //PC_In            NPC的值
+    //PC_In            NPC的�??
 //实验要求  
     //补全模块  
 
@@ -34,17 +34,17 @@ assign PC_raw = PCF + 4;
 
 always @(*) 
 begin
-if(JalD)
-begin
-    PC_In <= JalTarget;
-end
-else if(BranchE)    
+if(BranchE)
 begin
     PC_In <= BranchTarget;
 end
-else if(JalrE)
+else if(JalrE)    
 begin
     PC_In <= JalrTarget;
+end
+else if(JalD)
+begin
+    PC_In <= JalTarget;
 end
 else
 begin
