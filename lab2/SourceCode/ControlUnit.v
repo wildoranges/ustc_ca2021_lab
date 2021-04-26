@@ -244,30 +244,44 @@ begin
             RAluSrc2D <= 2'b10;
             BranchTypeD <= `NOBRANCH;
             MemWriteD <= 4'b0000;//32bit
-            RegWriteD <= `LW;//32bit
-            RegReadD <= 2'b10;//rs1
+            //RegWriteD <= `LW;//32bit
+            //RegReadD <= 2'b10;//rs1
             ImmType <= `ITYPE;
             case(Fn3)
             3'b000:begin//ADDI
                 AluContrlD <= `ADD;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             3'b010:begin
                 AluContrlD <= `SLT;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             3'b011:begin
                 AluContrlD <= `SLTU;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             3'b100:begin
                 AluContrlD <= `XOR;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             3'b110:begin
                 AluContrlD <= `OR;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             3'b111:begin
                 AluContrlD <= `AND;
+                RegWriteD <= `LW;
+                RegReadD <= 2'b10;
             end
             default:begin
                 AluContrlD <= 4'd11;
+                RegWriteD <= `NOREGWRITE;
+                RegReadD <= 2'b00;
             end
             endcase                
         end
