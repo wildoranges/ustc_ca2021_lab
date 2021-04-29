@@ -84,24 +84,30 @@ module WBSegReg(
 
     wire [31:0] RD_raw;
     reg[3:0] WE_SELECT;
+    reg[31:0] WD_IN;
     always@(*)begin
         case(WE)
         4'b1111:begin
             WE_SELECT = 4'b1111;
+            WD_IN = WD;
         end
         4'b0011:begin
             case(A[1:0])
             2'b00:begin
                 WE_SELECT = 4'b0011;
+                WD_IN = {16'b0,WD[15:0]};
             end 
             2'b01:begin
                 WE_SELECT = 4'b0110;
+                WD_IN = {8'b0,WD[15:0],8'b0};
             end
             2'b10:begin
                 WE_SELECT = 4'b1100;
+                WD_IN = {WD[15:0],16'b0};
             end
             default:begin
                 WE_SELECT = 4'b0011;
+                WD_IN = {16'b0,WD[15:0]};
             end
             endcase
         end
@@ -109,20 +115,25 @@ module WBSegReg(
             case(A[1:0])
             2'b00:begin
                 WE_SELECT = 4'b0001;
+                WD_IN = {24'b0,WD[7:0]};
             end
             2'b01:begin
                 WE_SELECT = 4'b0010;
+                WD_IN = {16'b0,WD[7:0],8'b0};
             end
             2'b10:begin
                 WE_SELECT = 4'b0100;
+                WD_IN = {8'b0,WD[7:0],16'b0};
             end
             2'b11:begin
                 WE_SELECT = 4'b1000;
+                WD_IN = {WD[7:0],24'b0};
             end
             endcase
         end
         default:begin
             WE_SELECT = 4'b0000;
+            WD_IN = 32'b0;
         end
         endcase
     end
@@ -130,7 +141,7 @@ module WBSegReg(
         .clk    (clk),                      //请完善代码
         .wea    (WE_SELECT),                      //请完善代码
         .addra  (A[31:2]),                      //请完善代码
-        .dina   (WD),                      //请完善代码
+        .dina   (WD_IN),                      //请完善代码
         .douta  ( RD_raw         ),
         .web    ( WE2            ),
         .addrb  ( A2[31:2]       ),
