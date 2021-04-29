@@ -83,9 +83,52 @@ module WBSegReg(
         end
 
     wire [31:0] RD_raw;
+    reg[3:0] WE_SELECT;
+    always@(*)begin
+        case(WE)
+        4'b1111:begin
+            WE_SELECT = 4'b1111;
+        end
+        4'b0011:begin
+            case(A[1:0])
+            2'b00:begin
+                WE_SELECT = 4'b0011;
+            end 
+            2'b01:begin
+                WE_SELECT = 4'b0110;
+            end
+            2'b10:begin
+                WE_SELECT = 4'b1100;
+            end
+            default:begin
+                WE_SELECT = 4'b0011;
+            end
+            endcase
+        end
+        4'b0001:begin
+            case(A[1:0])
+            2'b00:begin
+                WE_SELECT = 4'b0001;
+            end
+            2'b01:begin
+                WE_SELECT = 4'b0010;
+            end
+            2'b10:begin
+                WE_SELECT = 4'b0100;
+            end
+            2'b11:begin
+                WE_SELECT = 4'b1000;
+            end
+            endcase
+        end
+        default:begin
+            WE_SELECT = 4'b0000;
+        end
+        endcase
+    end
     DataRam DataRamInst (
         .clk    (clk),                      //请完善代码
-        .wea    (WE),                      //请完善代码
+        .wea    (WE_SELECT),                      //请完善代码
         .addra  (A[31:2]),                      //请完善代码
         .dina   (WD),                      //请完善代码
         .douta  ( RD_raw         ),

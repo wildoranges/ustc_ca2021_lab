@@ -62,7 +62,7 @@ begin
         2'b11:begin
             OUT <= {{24'b0},IN[31:24]};
         end
-        default:OUT <= {{24'b0},IN[7:0]};
+        /* default:OUT <= {{24'b0},IN[7:0]}; */
         endcase
     end
     `LH:begin
@@ -78,6 +78,7 @@ begin
         end
         default:begin
             OUT <= {{16{IN[15]}},IN[15:0]};
+            /* OUT <= {{16{IN[31]}},IN[31:24],IN[7:0]}; */
         end
         endcase
     end
@@ -94,6 +95,7 @@ begin
         end
         default:begin
             OUT <= {{16'b0},IN[15:0]};
+            /* OUT <= {{16'b0},IN[31:24],IN[7:0]}; */
         end
         endcase
     end
