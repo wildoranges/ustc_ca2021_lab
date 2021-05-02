@@ -14,14 +14,14 @@
 //				(they are all optional, you can run cpu without change paths here,if files are failed to open, we will not dump the content to .txt and will not try to initial your bram)
 //////////////////////////////////////////////////////////////////////////////////
 /*
-`define DataRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.data"           //修改此处为测试数据路�?
-`define InstRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.inst"           //修改此处为测试数据路�?
-`define DataRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\DataRamContent.txt"      //修改此处为测试数据路�?
-`define InstRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\InstRamContent.txt"      //修改此处为测试数据路�?
+`define DataRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.data"           //修改此处为测试数据路�??
+`define InstRamContentLoadPath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\1testAll.inst"           //修改此处为测试数据路�??
+`define DataRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\DataRamContent.txt"      //修改此处为测试数据路�??
+`define InstRamContentSavePath "C:\\private\\learning\\new_private\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\InstRamContent.txt"      //修改此处为测试数据路�??
 */
-`define DataRamContentLoadPath "E:\\learn\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\2testAll.data"           //修改此处为测试数据路�?
-`define InstRamContentLoadPath "E:\\learn\\comparch\\ustc_ca2021_lab\\lab2\\Simulation\\2testAll.inst"           //修改此处为测试数据路�?
-`define DataRamContentSavePath "E:\\learn\\comparch\\DataRamContent.txt"      //修改此处为测试数据路�?
+`define DataRamContentLoadPath "E:\\learn\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\test3.data"           //修改此处为测试数据路�??
+`define InstRamContentLoadPath "E:\\learn\\comparch\\ustc_ca2021_lab\\lab2\\TestDataTools\\test3.inst"           //修改此处为测试数据路�??
+`define DataRamContentSavePath "E:\\learn\\comparch\\DataRamContent.txt"      //修改此处为测试数据路�??
 `define InstRamContentSavePath "E:\\learn\\comparch\\InstRamContent.txt" 
 `define BRAMWORDS 4096  //a word is 32bit, so our bram is 4096*32bit
 
