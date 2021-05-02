@@ -1,0 +1,12 @@
+
+test3.om:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010054 <_start>:
+   10054:	000010b7          	lui	ra,0x1
+   10058:	00009173          	csrrw	sp,ustatus,ra
+   1005c:	000030b7          	lui	ra,0x3
+   10060:	0000a173          	csrrs	sp,ustatus,ra
+   10064:	0000b173          	csrrc	sp,ustatus,ra
