@@ -35,7 +35,12 @@ module HarzardUnit(
     input wire MemToRegE,
     input wire [2:0] RegWriteM, RegWriteW,
     output reg StallF, FlushF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW,
-    output reg [1:0] Forward1E, Forward2E
+    output reg [1:0] Forward1E, Forward2E,
+    input wire [11:0] CSRRs2E,
+    input wire [11:0] CSRRdM,
+    input wire [11:0] CSRRdW,
+    input wire CSRWriteE,CSRWriteM,CSRWriteW,
+    output reg [1:0] CSRForwardE
 );
 wire rs1hitm ;
 wire rs1hitw ;
@@ -43,6 +48,12 @@ wire rs2hitm ;
 wire rs2hitw ;
 assign regwem = |RegWriteM;
 assign regwew = |RegWriteW;
+
+wire csrrs2hitm;
+wire csrrs2hitw;
+assign csrrs2hitm = (CSRWriteM)&&(CSRRs2E==CSRRdM)&&(CSRRdM[11:10]!=2'b11)&&(CSRWriteE);
+assign csrrs2hitw = (CSRWriteW)&&(CSRRs2E==CSRRdW)&&(CSRRdW[11:10]!=2'b11)&&(CSRWriteE);
+
 always@(*) begin //checking jump and hazard
     if(CpuRst)begin
         {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b11111;
@@ -86,6 +97,10 @@ assign rs2hitm = (regwem)&&(Rs2E==RdM)&&(RdM!=5'b00000);
 assign rs2hitw = (regwew)&&(Rs2E==RdW)&&(RdW!=5'b00000);
 
 always @(*) begin //checking forward
+    if(CpuRst) begin
+        Forward1E <= 2'b00;
+    end
+    else begin
     case(RegReadE)
     2'b11:begin
         case({rs1hitm,rs1hitw})
@@ -159,8 +174,30 @@ always @(*) begin //checking forward
         Forward2E <= 2'b00;
     end
     endcase
+    end
 end
 
+always @(*) begin//csr
+    if(CpuRst) begin
+        CSRForwardE <= 2'b00;
+    end
+    else begin
+    case({csrrs2hitm,csrrs2hitw})
+    2'b00:begin
+        CSRForwardE <= 2'b00;
+    end
+    2'b01:begin
+        CSRForwardE <= 2'b01;
+    end
+    2'b10:begin
+        CSRForwardE <= 2'b10;
+    end
+    2'b11:begin
+        CSRForwardE <= 2'b10;
+    end
+    endcase
+    end
+end
 endmodule
 
   

@@ -43,6 +43,7 @@
     `define BTYPE  3'd3
     `define UTYPE  3'd4
     `define JTYPE  3'd5  
+    `define ZTYPE  3'd6
 //RegWrite[2:0]  six kind of ways to save values to Register
     `define NOREGWRITE  3'b0	//	Do not write Register
     `define LB  3'd1			//	load 8bit from Mem then signed extended to 32bit
@@ -50,4 +51,8 @@
     `define LW  3'd3			//	write 32bit to Register
     `define LBU  3'd4			//	load 8bit from Mem then unsigned extended to 32bit
     `define LHU  3'd5			//	load 16bit from Mem then unsigned extended to 32bit
+//CSRAlu
+    `define SWAP  2'b01
+    `define SET   2'b10
+    `define CLEAR 2'b11
 `endif

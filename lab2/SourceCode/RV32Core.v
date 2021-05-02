@@ -10,7 +10,7 @@
 // Description: Top level of our CPU Core
 //////////////////////////////////////////////////////////////////////////////////
 //功能说明
-    //RV32I 指令集CPU的顶层模块
+    //RV32I 指令集CPU的顶层模�?
 //实验要求  
     //无需修改
 
@@ -44,6 +44,26 @@ module RV32Core(
     wire [31:0] DM_RD_Ext;
     wire [2:0] ImmType;
     wire [31:0] ImmD;
+    wire CSRAlusrc1D;
+    wire CSRAlusrc1E;
+    wire AluOutSrc;
+    wire AluOutSrcE;
+    wire CSRWriteD;
+    wire CSRWriteE;
+    wire CSRWriteM;
+    wire CSRWriteW;
+    wire [1:0] CSRAluCtlD;
+    wire [1:0] CSRAluCtlE;
+    wire [11:0] CSRRdD;
+    wire [11:0] CSRRdE;
+    wire [11:0] CSRRdM;
+    wire [11:0] CSRRdW;
+    wire [31:0] CSRWDE;
+    wire [31:0] CSRWDM;
+    wire [31:0] CSRWDW;
+    wire [31:0] CSROut;
+    wire [31:0] CSROutE;
+    wire [31:0] CSRAluOutE;
     wire [31:0] JalNPC;
     wire [31:0] BrNPC; 
     wire [31:0] ImmE;
@@ -87,8 +107,12 @@ module RV32Core(
     wire [1:0] Forward1E;
     wire [1:0] Forward2E;
     wire [1:0] LoadedBytesSelect;
+    wire [1:0] CSRForwardE;
+    wire [31:0] CSROperand1;
+    wire [31:0] CSROperand2;
     //wire values assignments
     assign {Funct7D, Rs2D, Rs1D, Funct3D, RdD, OpCodeD} = Instr;
+    assign CSRRdD = Instr[31:20];
     assign JalNPC=ImmD+PCD;
     assign ForwardData1 = Forward1E[1]?(AluOutM):( Forward1E[0]?RegWriteData:RegOut1E );
     assign Operand1 = AluSrc1E?PCE:ForwardData1;
@@ -96,7 +120,8 @@ module RV32Core(
     assign Operand2 = AluSrc2E[1]?(ImmE):( AluSrc2E[0]?Rs2E:ForwardData2 );
     assign ResultM = LoadNpcM ? (PCM+4) : AluOutM;
     assign RegWriteData = ~MemToRegW?ResultW:DM_RD_Ext;
-
+    assign CSROperand1 = CSRAlusrc1E?ImmE:ForwardData1;
+    assign CSROperand2 = CSRForwardE[1]?(CSRWDM) : (CSRForwardE[0] ? CSRWDW : CSROutE);
     //Module connections
     // ---------------------------------------------
     // PC-IF
@@ -152,7 +177,11 @@ module RV32Core(
         .AluContrlD(AluContrlD),
         .AluSrc1D(AluSrc1D),
         .AluSrc2D(AluSrc2D),
-        .ImmType(ImmType)
+        .ImmType(ImmType),
+        .CSRAlusrc1D(CSRAlusrc1D),
+        .AluOutSrc(AluOutSrc),
+        .CSRWriteD(CSRWriteD),
+        .CSRAluCtlD(CSRAluCtlD)
     );
 
     ImmOperandUnit ImmOperandUnit1(
@@ -171,6 +200,16 @@ module RV32Core(
         .WD3(RegWriteData),
         .RD1(RegOut1D),
         .RD2(RegOut2D)
+    );
+
+    CSRFile CSR1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .WE(CSRWriteW),
+        .A(CSRRdD),
+        .A1(CSRRdW),
+        .WD(CSRWDW),
+        .RD(CSROut)
     );
 
     // ---------------------------------------------
@@ -215,8 +254,20 @@ module RV32Core(
         .AluSrc1D(AluSrc1D),
         .AluSrc1E(AluSrc1E),
         .AluSrc2D(AluSrc2D),
-        .AluSrc2E(AluSrc2E)
-    	); 
+        .AluSrc2E(AluSrc2E),
+        .CSRAlusrc1D(CSRAlusrc1D),
+        .CSRAlusrc1E(CSRAlusrc1E),
+        .AluOutSrcD(AluOutSrc),
+        .AluOutSrcE(AluOutSrcE),
+        .CSRWriteD(CSRWriteD),
+        .CSRWriteE(CSRWriteE),
+        .CSRAluCtlD(CSRAluCtlD),
+        .CSRAluCtlE(CSRAluCtlE),
+        .CSRRdD(CSRRdD),
+        .CSRRdE(CSRRdE),
+        .CSROutD(CSROut),
+        .CSROutE(CSROutE)
+    	);
 
     ALU ALU1(
         .Operand1(Operand1),
@@ -224,6 +275,14 @@ module RV32Core(
         .AluContrl(AluContrlE),
         .AluOut(AluOutE)
     	);
+
+    CSRALU CSRALU1(
+        .Operand1(CSROperand1),
+        .Operand2(CSROperand2),
+        .AluCTL(CSRAluCtlE),
+        .AluOut(CSRAluOutE),
+        .CSROut(CSRWDE)
+    );
 
     BranchDecisionMaking BranchDecisionMaking1(
         .BranchTypeE(BranchTypeE),
@@ -235,11 +294,13 @@ module RV32Core(
     // ---------------------------------------------
     // MEM stage
     // ---------------------------------------------
+    wire [31:0] OutE;
+    assign OutE = AluOutSrcE ? CSRAluOutE : AluOutE;
     MEMSegReg MEMSegReg1(
         .clk(CPU_CLK),
         .en(~StallM),
         .clear(FlushM),
-        .AluOutE(AluOutE),
+        .AluOutE(OutE),
         .AluOutM(AluOutM), 
         .ForwardData2(ForwardData2),
         .StoreDataM(StoreDataM), 
@@ -254,7 +315,13 @@ module RV32Core(
         .MemWriteE(MemWriteE),
         .MemWriteM(MemWriteM),
         .LoadNpcE(LoadNpcE),
-        .LoadNpcM(LoadNpcM)
+        .LoadNpcM(LoadNpcM),
+        .CSRWriteE(CSRWriteE),
+        .CSRWriteM(CSRWriteM),
+        .CSRRdE(CSRRdE),
+        .CSRRdM(CSRRdM),
+        .CSRWDE(CSRWDE),
+        .CSRWDM(CSRWDM)
     );
 
     // ---------------------------------------------
@@ -280,7 +347,13 @@ module RV32Core(
         .RegWriteM(RegWriteM),
         .RegWriteW(RegWriteW),
         .MemToRegM(MemToRegM),
-        .MemToRegW(MemToRegW)
+        .MemToRegW(MemToRegW),
+        .CSRWriteM(CSRWriteM),
+        .CSRWriteW(CSRWriteW),
+        .CSRRdM(CSRRdM),
+        .CSRRdW(CSRRdW),
+        .CSRWDM(CSRWDM),
+        .CSRWDW(CSRWDW)
     );
     
     DataExt DataExt1(
@@ -321,7 +394,14 @@ module RV32Core(
         .StallW(StallW),
         .FlushW(FlushW),
         .Forward1E(Forward1E),
-        .Forward2E(Forward2E)
+        .Forward2E(Forward2E),
+        .CSRRs2E(CSRRdE),
+        .CSRRdM(CSRRdM),
+        .CSRRdW(CSRRdW),
+        .CSRWriteE(CSRWriteE),
+        .CSRWriteM(CSRWriteM),
+        .CSRWriteW(CSRWriteW),
+        .CSRForwardE(CSRForwardE)
     	);    
     	         
 endmodule

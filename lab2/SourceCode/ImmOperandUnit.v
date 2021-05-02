@@ -41,6 +41,7 @@ module ImmOperandUnit(
             `BTYPE: Out <= { {20{In[31]}}, In[7], In[30:25], In[11:8], 1'b0 };
             `UTYPE: Out <= { In[31:20], In[19:12], 12'b0};
             `JTYPE: Out <= { {12{In[31]}}, In[19:12], In[20], In[30:21], 1'b0 };
+            `ZTYPE: Out <= { 27'b0,In[19:15]};
             default:Out<=32'hxxxxxxxx;
         endcase
     end

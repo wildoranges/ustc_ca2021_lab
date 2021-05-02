@@ -55,7 +55,19 @@ module EXSegReg(
     input wire AluSrc1D,
     output reg AluSrc1E,
     input wire [1:0] AluSrc2D,
-    output reg [1:0] AluSrc2E
+    output reg [1:0] AluSrc2E,
+    input wire CSRAlusrc1D,
+    output reg CSRAlusrc1E,
+    input wire AluOutSrcD,
+    output reg AluOutSrcE,
+    input wire CSRWriteD,
+    output reg CSRWriteE,
+    input wire [1:0] CSRAluCtlD,
+    output reg [1:0] CSRAluCtlE,
+    input wire [11:0] CSRRdD,
+    output reg [11:0] CSRRdE,
+    input wire [31:0] CSROutD,
+    output reg [31:0] CSROutE
     );
     initial begin
         PCE        = 32'b0; 
@@ -76,12 +88,24 @@ module EXSegReg(
         AluContrlE = 5'b0;
         AluSrc1E   = 1'b0; 
         AluSrc2E   = 2'b0; 
+        CSRAlusrc1E = 1'b0;
+        AluOutSrcE = 1'b0;
+        CSRWriteE = 1'b0;
+        CSRAluCtlE = 2'b0;
+        CSRRdE = 12'b0;
+        CSROutE = 32'b0;
     end
     //
     always@(posedge clk) begin
         if(en)
             if(clear)
                 begin
+                CSRAlusrc1E <= 1'b0;
+                AluOutSrcE <= 1'b0;
+                CSRWriteE <= 1'b0;
+                CSRAluCtlE <= 2'b0;
+                CSRRdE <= 12'b0;
+                CSROutE <= 32'b0;
                 PCE<=32'b0; 
                 BrNPC<=32'b0; 
                 ImmE<=32'b0;
@@ -101,6 +125,12 @@ module EXSegReg(
                 AluSrc1E<=1'b0; 
                 AluSrc2E<=2'b0;     
             end else begin
+                CSRAlusrc1E <= CSRAlusrc1D;
+                AluOutSrcE <= AluOutSrcD;
+                CSRWriteE <= CSRWriteD;
+                CSRAluCtlE <= CSRAluCtlD;
+                CSRRdE <= CSRRdD;
+                CSROutE <= CSROutD;
                 PCE<=PCD; 
                 BrNPC<=JalNPC; 
                 ImmE<=ImmD;
