@@ -9,24 +9,24 @@
 // Tool Versions: Vivado 2017.4.1
 // Description: RISC-V Instruction Decoder
 //////////////////////////////////////////////////////////////////////////////////
-//功能和接口说�?
-    //ControlUnit       是本CPU的指令译码器，组合�?�辑电路
+//功能和接口说�?
+    //ControlUnit       是本CPU的指令译码器，组合�?�辑电路
 //输入
-    // Op               是指令的操作码部�?
+    // Op               是指令的操作码部�?
     // Fn3              是指令的func3部分
     // Fn7              是指令的func7部分
 //输出
     // JalD==1          表示Jal指令到达ID译码阶段
     // JalrD==1         表示Jalr指令到达ID译码阶段
-    // RegWriteD        表示ID阶段的指令对应的寄存器写入模�?
-    // MemToRegD==1     表示ID阶段的指令需要将data memory读取的�?�写入寄存器,
-    // MemWriteD        �?4bit，为1的部分表示有效，对于data memory�?32bit字按byte进行写入,MemWriteD=0001表示只写入最�?1个byte，和xilinx bram的接口类�?
+    // RegWriteD        表示ID阶段的指令对应的寄存器写入模�?
+    // MemToRegD==1     表示ID阶段的指令需要将data memory读取的�?�写入寄存器,
+    // MemWriteD        �?4bit，为1的部分表示有效，对于data memory�?32bit字按byte进行写入,MemWriteD=0001表示只写入最�?1个byte，和xilinx bram的接口类�?
     // LoadNpcD==1      表示将NextPC输出到ResultM
-    // RegReadD         表示A1和A2对应的寄存器值是否被使用到了，用于forward的处�?
-    // BranchTypeD      表示不同的分支类型，�?有类型定义在Parameters.v�?
-    // AluContrlD       表示不同的ALU计算功能，所有类型定义在Parameters.v�?
-    // AluSrc2D         表示Alu输入�?2的�?�择
-    // AluSrc1D         表示Alu输入�?1的�?�择
+    // RegReadD         表示A1和A2对应的寄存器值是否被使用到了，用于forward的处�?
+    // BranchTypeD      表示不同的分支类型，�?有类型定义在Parameters.v�?
+    // AluContrlD       表示不同的ALU计算功能，所有类型定义在Parameters.v�?
+    // AluSrc2D         表示Alu输入�?2的�?�择
+    // AluSrc1D         表示Alu输入�?1的�?�择
     // ImmType          表示指令的立即数格式
 //实验要求  
     //补全模块  
@@ -36,6 +36,8 @@ module ControlUnit(
     input wire [6:0] Op,
     input wire [2:0] Fn3,
     input wire [6:0] Fn7,
+    input wire [4:0] Rs1D,
+    input wire [4:0] RdD,
     output wire JalD,
     output wire JalrD,
     output reg [2:0] RegWriteD,
@@ -51,7 +53,8 @@ module ControlUnit(
     output reg CSRAlusrc1D,
     output reg AluOutSrc,
     output reg CSRWriteD,
-    output reg [1:0] CSRAluCtlD
+    output reg [1:0] CSRAluCtlD,
+    output reg CSRRead
     ); 
 reg RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D;
 reg [1:0] RAluSrc2D;
@@ -64,45 +67,64 @@ if(Op==7'b1110011)begin//csr
     BranchTypeD <= `NOBRANCH;
     MemWriteD <= 4'b0000;
     ImmType <= `ZTYPE;
-    RegWriteD <= `LW;
     AluContrlD <= 4'd11;
     AluOutSrc <= 1'b1;
-    CSRWriteD <= 1'b1;
     case(Fn3)
     3'b001:begin//csrrw
         RegReadD <= 2'b10;
         CSRAlusrc1D <= 1'b0;
         CSRAluCtlD <= `SWAP;
+        CSRRead <= (RdD==5'b00000)?1'b0:1'b1;
+        RegWriteD <= (RdD==5'b00000)?`NOREGWRITE:`LW;
+        CSRWriteD <= 1'b1;
     end
     3'b101:begin//csrrwi
         RegReadD <= 2'b00;
         CSRAlusrc1D <= 1'b1;
         CSRAluCtlD <= `SWAP;
+        CSRRead <= (RdD==5'b00000)?1'b0:1'b1;
+        RegWriteD <= (RdD==5'b00000)?`NOREGWRITE:`LW;
+        CSRWriteD <= 1'b1;
     end
     3'b010:begin//csrrs
         RegReadD <= 2'b10;
         CSRAlusrc1D <= 1'b0;
         CSRAluCtlD <= `SET;
+        CSRRead <= 1'b1;
+        RegWriteD <= `LW;
+        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
     end
     3'b110:begin//csrrsi
         RegReadD <= 2'b00;
         CSRAlusrc1D <= 1'b1;
         CSRAluCtlD <= `SET;
+        CSRRead <= 1'b1;
+        RegWriteD <= `LW;
+        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
     end
     3'b011:begin//csrrc
         RegReadD <= 2'b10;
         CSRAlusrc1D <= 1'b0;
         CSRAluCtlD <= `CLEAR;
+        CSRRead <= 1'b1;
+        RegWriteD <= `LW;
+        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
     end
     3'b111:begin//csrrci
         RegReadD <= 2'b00;
         CSRAlusrc1D <= 1'b1;
         CSRAluCtlD <= `CLEAR;
+        CSRRead <= 1'b1;
+        RegWriteD <= `LW;
+        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
     end
     default:begin
         RegReadD <= 2'b00;
         CSRAlusrc1D <= 1'b0;
         CSRAluCtlD <= 2'b00;
+        CSRRead <= 1'b0;
+        RegWriteD <= `NOREGWRITE;
+        CSRWriteD <= 1'b0;
     end
     endcase
 end
@@ -112,6 +134,7 @@ begin
     AluOutSrc <= 1'b0;
     CSRWriteD <= 1'b0;
     CSRAluCtlD <= 2'b00;
+    CSRRead <= 1'b0;
     case(Op)
     7'b0110011:begin//Rtype
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;

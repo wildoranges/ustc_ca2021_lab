@@ -162,10 +162,13 @@ module RV32Core(
         .PCD(PCD) 
     );
 
+    wire CSRRead;
     ControlUnit ControlUnit1(
         .Op(OpCodeD),
         .Fn3(Funct3D),
         .Fn7(Funct7D),
+        .Rs1D(Rs1D),
+        .RdD(RdD),
         .JalD(JalD),
         .JalrD(JalrD),
         .RegWriteD(RegWriteD),
@@ -181,7 +184,8 @@ module RV32Core(
         .CSRAlusrc1D(CSRAlusrc1D),
         .AluOutSrc(AluOutSrc),
         .CSRWriteD(CSRWriteD),
-        .CSRAluCtlD(CSRAluCtlD)
+        .CSRAluCtlD(CSRAluCtlD),
+        .CSRRead(CSRRead)
     );
 
     ImmOperandUnit ImmOperandUnit1(
