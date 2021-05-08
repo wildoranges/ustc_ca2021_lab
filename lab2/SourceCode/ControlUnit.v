@@ -100,7 +100,7 @@ if(Op==7'b1110011)begin//csr
         CSRAluCtlD <= `SET;
         CSRRead <= 1'b1;
         RegWriteD <= `LW;
-        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
+        CSRWriteD <= 1'b1;
     end
     3'b011:begin//csrrc
         RegReadD <= 2'b10;
@@ -116,7 +116,7 @@ if(Op==7'b1110011)begin//csr
         CSRAluCtlD <= `CLEAR;
         CSRRead <= 1'b1;
         RegWriteD <= `LW;
-        CSRWriteD <= (Rs1D==5'b00000)?1'b0:1'b1;
+        CSRWriteD <= 1'b1;
     end
     default:begin
         RegReadD <= 2'b00;
