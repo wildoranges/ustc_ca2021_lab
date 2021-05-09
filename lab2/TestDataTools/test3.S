@@ -2,6 +2,7 @@
  	.global _start
     #CSRRW rd, csr, rs1
 _start:
+    lui x2,0x1
     lui x1,0x1
     csrrw x2,0x000,x1
     lui x1,0x3
