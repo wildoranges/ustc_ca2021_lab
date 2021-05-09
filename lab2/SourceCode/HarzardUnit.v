@@ -39,7 +39,7 @@ module HarzardUnit(
     input wire [11:0] CSRRs2E,
     input wire [11:0] CSRRdM,
     input wire [11:0] CSRRdW,
-    input wire CSRWriteE,CSRWriteM,CSRWriteW,
+    input wire CSRReadE,CSRWriteE,CSRWriteM,CSRWriteW,
     output reg [1:0] CSRForwardE
 );
 wire rs1hitm ;
@@ -51,8 +51,8 @@ assign regwew = |RegWriteW;
 
 wire csrrs2hitm;
 wire csrrs2hitw;
-assign csrrs2hitm = (CSRWriteM)&&(CSRRs2E==CSRRdM)&&(CSRRdM[11:10]!=2'b11)&&(CSRWriteE);
-assign csrrs2hitw = (CSRWriteW)&&(CSRRs2E==CSRRdW)&&(CSRRdW[11:10]!=2'b11)&&(CSRWriteE);
+assign csrrs2hitm = (CSRWriteM)&&(CSRRs2E==CSRRdM)&&(CSRRdM[11:10]!=2'b11)&&(CSRReadE);
+assign csrrs2hitw = (CSRWriteW)&&(CSRRs2E==CSRRdW)&&(CSRRdW[11:10]!=2'b11)&&(CSRReadE);
 
 always@(*) begin //checking jump and hazard
     if(CpuRst)begin

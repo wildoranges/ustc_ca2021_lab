@@ -163,6 +163,7 @@ module RV32Core(
     );
 
     wire CSRRead;
+    wire CSRReadE;
     ControlUnit ControlUnit1(
         .Op(OpCodeD),
         .Fn3(Funct3D),
@@ -265,6 +266,8 @@ module RV32Core(
         .AluOutSrcE(AluOutSrcE),
         .CSRWriteD(CSRWriteD),
         .CSRWriteE(CSRWriteE),
+        .CSRRead(CSRRead),
+        .CSRReadE(CSRReadE),
         .CSRAluCtlD(CSRAluCtlD),
         .CSRAluCtlE(CSRAluCtlE),
         .CSRRdD(CSRRdD),
@@ -405,7 +408,8 @@ module RV32Core(
         .CSRWriteE(CSRWriteE),
         .CSRWriteM(CSRWriteM),
         .CSRWriteW(CSRWriteW),
-        .CSRForwardE(CSRForwardE)
+        .CSRForwardE(CSRForwardE),
+        .CSRReadE(CSRReadE)
     	);    
     	         
 endmodule
