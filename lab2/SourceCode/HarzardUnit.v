@@ -91,19 +91,18 @@ always@(*) begin //checking jump and hazard
     end
 end
 
-assign rs1hitm = (regwem)&&(Rs1E==RdM)&&(RdM!=5'b00000);
-assign rs1hitw = (regwew)&&(Rs1E==RdW)&&(RdW!=5'b00000);
-assign rs2hitm = (regwem)&&(Rs2E==RdM)&&(RdM!=5'b00000);
-assign rs2hitw = (regwew)&&(Rs2E==RdW)&&(RdW!=5'b00000);
+assign rs1hitm = (regwem)&&(Rs1E==RdM)&&(RdM!=5'b00000)&&RegReadE[1];
+assign rs1hitw = (regwew)&&(Rs1E==RdW)&&(RdW!=5'b00000)&&RegReadE[1];
+assign rs2hitm = (regwem)&&(Rs2E==RdM)&&(RdM!=5'b00000)&&RegReadE[0];
+assign rs2hitw = (regwew)&&(Rs2E==RdW)&&(RdW!=5'b00000)&&RegReadE[0];
 
-always @(*) begin //checking forward
+always@(*)begin
     if(CpuRst) begin
         Forward1E <= 2'b00;
+        Forward2E <= 2'b00;
     end
     else begin
-    case(RegReadE)
-    2'b11:begin
-        case({rs1hitm,rs1hitw})
+    case({rs1hitm,rs1hitw})
         2'b00:begin
             Forward1E <= 2'b00;
         end
@@ -116,9 +115,8 @@ always @(*) begin //checking forward
         2'b11:begin
             Forward1E <= 2'b10;
         end
-        endcase
-
-        case({rs2hitm,rs2hitw})
+    endcase
+    case({rs2hitm,rs2hitw})
         2'b00:begin
             Forward2E <= 2'b00;
         end
@@ -131,48 +129,6 @@ always @(*) begin //checking forward
         2'b11:begin
             Forward2E <= 2'b10;
         end
-        endcase
-    end
-    2'b10:begin
-        Forward2E <= 2'b00;
-
-        case({rs1hitm,rs1hitw})
-        2'b00:begin
-            Forward1E <= 2'b00;
-        end
-        2'b01:begin
-            Forward1E <= 2'b01;
-        end
-        2'b10:begin
-            Forward1E <= 2'b10;
-        end
-        2'b11:begin
-            Forward1E <= 2'b10;
-        end
-        endcase
-    end
-    2'b01:begin
-        Forward1E <= 2'b00;
-
-        case({rs2hitm,rs2hitw})
-        2'b00:begin
-            Forward2E <= 2'b00;
-        end
-        2'b01:begin
-            Forward2E <= 2'b01;
-        end
-        2'b10:begin
-            Forward2E <= 2'b10;
-        end
-        2'b11:begin
-            Forward2E <= 2'b10;
-        end
-        endcase
-    end
-    2'b00:begin
-        Forward1E <= 2'b00;
-        Forward2E <= 2'b00;
-    end
     endcase
     end
 end
