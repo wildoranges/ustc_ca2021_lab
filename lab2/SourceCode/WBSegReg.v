@@ -39,6 +39,7 @@
 
 module WBSegReg(
     input wire clk,
+    input wire rst,
     input wire en,
     input wire clear,
     //Data Memory Access
@@ -67,7 +68,9 @@ module WBSegReg(
     input wire [11:0] CSRRdM,
     output reg [11:0] CSRRdW,
     input wire [31:0] CSRWDM,
-    output reg [31:0] CSRWDW
+    output reg [31:0] CSRWDW,
+    output wire DCacheMiss,
+    input wire MemReadM
     );
     
     //
@@ -95,7 +98,7 @@ module WBSegReg(
         end
 
     wire [31:0] RD_raw;
-    DataRam DataRamInst (
+    /* DataRam DataRamInst (
         .clk    (clk),                      //请完善代码
         .wea    (WE << A[1:0]),                      //请完善代码
         .addra  (A[31:2]),                      //请完善代码
@@ -105,7 +108,19 @@ module WBSegReg(
         .addrb  ( A2[31:2]       ),
         .dinb   ( WD2            ),
         .doutb  ( RD2            )
-    );   
+    ); */   
+
+    cache DataCacheInst (
+        .clk    (clk),             
+        .rst    (rst),         
+        .miss   (DCacheMiss),
+        .addr   (A[31:0]),//TODO:ADD MEMREAD
+        .rd_req (MemReadM),
+        .rd_data (RD_raw),
+        .wr_req (|WE),
+        .wr_data (WD)
+    ); 
+
     // Add clear and stall support
     // if chip not enabled, output output last read result
     // else if chip clear, output 0

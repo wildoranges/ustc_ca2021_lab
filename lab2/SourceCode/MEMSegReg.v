@@ -41,7 +41,9 @@ module MEMSegReg(
     input wire [11:0] CSRRdE,
     output reg [11:0] CSRRdM,
     input wire [31:0] CSRWDE,
-    output reg [31:0] CSRWDM
+    output reg [31:0] CSRWDM,
+    input wire MemReadE,
+    output reg MemReadM
     );
     initial begin
         AluOutM    = 0;
@@ -55,6 +57,7 @@ module MEMSegReg(
         CSRWriteM  = 1'b0;
         CSRRdM = 12'b0;
         CSRWDM = 32'b0;
+        MemReadM = 1'b0;
     end
     
     always@(posedge clk)
@@ -70,6 +73,7 @@ module MEMSegReg(
             CSRWriteM  <= clear ?  1'b0 : CSRWriteE;
             CSRRdM     <= clear ? 12'b0 : CSRRdE;
             CSRWDM     <= clear ? 32'b0 : CSRWDE;
+            MemReadM   <= clear ?  1'b0 : MemReadE;
         end
     
 endmodule

@@ -32,6 +32,9 @@ module RV32Core(
     wire [31:0] PCF;
     wire [31:0] Instr, PCD;
     wire JalD, JalrD, LoadNpcD, MemToRegD, AluSrc1D;
+    wire MemReadD;
+    wire MemReadE;
+    wire MemReadM;
     wire [2:0] RegWriteD;
     wire [3:0] MemWriteD;
     wire [1:0] RegReadD;
@@ -110,6 +113,8 @@ module RV32Core(
     wire [1:0] CSRForwardE;
     wire [31:0] CSROperand1;
     wire [31:0] CSROperand2;
+    wire DCacheMiss;
+    //wire ICacheMiss;
     //wire values assignments
     assign {Funct7D, Rs2D, Rs1D, Funct3D, RdD, OpCodeD} = Instr;
     assign CSRRdD = Instr[31:20];
@@ -186,7 +191,8 @@ module RV32Core(
         .AluOutSrc(AluOutSrc),
         .CSRWriteD(CSRWriteD),
         .CSRAluCtlD(CSRAluCtlD),
-        .CSRRead(CSRRead)
+        .CSRRead(CSRRead),
+        .MemReadD(MemReadD)
     );
 
     ImmOperandUnit ImmOperandUnit1(
@@ -273,7 +279,9 @@ module RV32Core(
         .CSRRdD(CSRRdD),
         .CSRRdE(CSRRdE),
         .CSROutD(CSROut),
-        .CSROutE(CSROutE)
+        .CSROutE(CSROutE),
+        .MemReadD(MemReadD),
+        .MemReadE(MemReadE) 
     	);
 
     ALU ALU1(
@@ -328,7 +336,9 @@ module RV32Core(
         .CSRRdE(CSRRdE),
         .CSRRdM(CSRRdM),
         .CSRWDE(CSRWDE),
-        .CSRWDM(CSRWDM)
+        .CSRWDM(CSRWDM),
+        .MemReadE(MemReadE),
+        .MemReadM(MemReadM)
     );
 
     // ---------------------------------------------
@@ -336,6 +346,7 @@ module RV32Core(
     // ---------------------------------------------
     WBSegReg WBSegReg1(
         .clk(CPU_CLK),
+        .rst(CPU_RST),
         .en(~StallW),
         .clear(FlushW),
         .A(AluOutM),
@@ -360,7 +371,9 @@ module RV32Core(
         .CSRRdM(CSRRdM),
         .CSRRdW(CSRRdW),
         .CSRWDM(CSRWDM),
-        .CSRWDW(CSRWDW)
+        .CSRWDW(CSRWDW),
+        .MemReadM(MemReadM),
+        .DCacheMiss(DCacheMiss)
     );
     
     DataExt DataExt1(
@@ -389,7 +402,7 @@ module RV32Core(
         .RdW(RdW),
         .RegWriteW(RegWriteW),
         .ICacheMiss(1'b0),
-        .DCacheMiss(1'b0),
+        .DCacheMiss(DCacheMiss),
         .StallF(StallF),
         .FlushF(FlushF),
         .StallD(StallD),

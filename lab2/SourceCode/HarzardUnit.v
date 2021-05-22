@@ -59,6 +59,11 @@ always@(*) begin //checking jump and hazard
         {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b11111;
         {StallF, StallD, StallE, StallM, StallW} <= 5'b00000;
     end
+    else begin 
+    if(DCacheMiss)begin
+        {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b00000;
+        {StallF, StallD, StallE, StallM, StallW} <= 5'b11111;
+    end
     else begin
     if(BranchE)begin
         {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b01100;
@@ -74,7 +79,7 @@ always@(*) begin //checking jump and hazard
     end
     else begin
         if(MemToRegE)begin
-            if(Rs1D==RdE||Rs2D==RdE&&RdE!=5'b00000) begin//hazard detected
+            if((Rs1D==RdE||Rs2D==RdE)&&RdE!=5'b00000) begin//hazard detected
                 {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b00100;
                 {StallF, StallD, StallE, StallM, StallW} <= 5'b11000;
             end
@@ -87,7 +92,8 @@ always@(*) begin //checking jump and hazard
             {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b00000;
             {StallF, StallD, StallE, StallM, StallW} <= 5'b00000;
         end
-    end    
+    end 
+    end   
     end
 end
 

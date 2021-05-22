@@ -54,7 +54,8 @@ module ControlUnit(
     output reg AluOutSrc,
     output reg CSRWriteD,
     output reg [1:0] CSRAluCtlD,
-    output reg CSRRead
+    output reg CSRRead,
+    output reg MemReadD
     ); 
 reg RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D;
 reg [1:0] RAluSrc2D;
@@ -69,6 +70,7 @@ if(Op==7'b1110011)begin//csr
     ImmType <= `ZTYPE;
     AluContrlD <= 4'd11;
     AluOutSrc <= 1'b1;
+    MemReadD <= 1'b0;
     case(Fn3)
     3'b001:begin//csrrw
         RegReadD <= 2'b10;
@@ -142,6 +144,7 @@ begin
         BranchTypeD <= `NOBRANCH;
         MemWriteD <= 4'b0000;//32bit
         ImmType <= `RTYPE;
+        MemReadD <= 1'b0;
         case(Fn3)
         3'b000:begin
             case(Fn7)
@@ -273,6 +276,7 @@ begin
         endcase
     end
     7'b0010011:begin//Itype
+        MemReadD <= 1'b0;
         if(Fn3==3'b001)
         begin
             {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
@@ -375,6 +379,7 @@ begin
         RegReadD <= 2'b11;//rs1 rs2
         ImmType <= `STYPE;
         AluContrlD <= `ADD;
+        MemReadD <= 1'b0;
         case(Fn3)
         3'b000:begin//store byte
             MemWriteD <= 4'b0001;
@@ -399,6 +404,7 @@ begin
         RegReadD <= 2'b10;//rs1
         ImmType <= `ITYPE;
         AluContrlD <= `ADD;
+        MemReadD <= 1'b1;
         case(Fn3)
         3'b000:begin//load byte
             RegWriteD <= `LB;
@@ -427,6 +433,7 @@ begin
         RegReadD <= 2'b11;//rs1 rs2
         ImmType <= `BTYPE;
         AluContrlD <= 4'd11;
+        MemReadD <= 1'b0;
         case(Fn3)
         3'b000:begin
             BranchTypeD <= `BEQ;
@@ -460,6 +467,7 @@ begin
         RegReadD <= 2'b10;//rs1
         ImmType <= `ITYPE;
         AluContrlD <= `ADD;
+        MemReadD <= 1'b0;
     end
     7'b1101111:begin//jal
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b10010;
@@ -470,6 +478,7 @@ begin
         RegReadD <= 2'b00;//
         ImmType <= `JTYPE;
         AluContrlD <= 4'd11;
+        MemReadD <= 1'b0;
     end
     7'b0010111:begin//AUIPC
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00001;
@@ -480,6 +489,7 @@ begin
         RegReadD <= 2'b00;//
         ImmType <= `UTYPE;
         AluContrlD <= `ADD;
+        MemReadD <= 1'b0;
     end
     7'b0110111:begin
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
@@ -490,6 +500,7 @@ begin
         RegReadD <= 2'b00;//
         ImmType <= `UTYPE;
         AluContrlD <= `LUI;
+        MemReadD <= 1'b0;
     end
     default:begin
         {RJalD,RJalrD,RMemToRegD,RLoadNpcD,RAluSrc1D} <= 5'b00000;
@@ -500,6 +511,7 @@ begin
         RegReadD <= 2'b00;//
         ImmType <= `RTYPE;
         AluContrlD <= 4'd11;
+        MemReadD <= 1'b0;
     end
     endcase    
 end

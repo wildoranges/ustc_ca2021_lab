@@ -69,7 +69,9 @@ module EXSegReg(
     input wire [31:0] CSROutD,
     output reg [31:0] CSROutE,
     input wire CSRRead,
-    output reg CSRReadE
+    output reg CSRReadE,
+    input wire MemReadD,
+    output reg MemReadE
     );
     initial begin
         PCE        = 32'b0; 
@@ -97,6 +99,7 @@ module EXSegReg(
         CSRRdE = 12'b0;
         CSROutE = 32'b0;
         CSRReadE = 1'b0;
+        MemReadE = 1'b0;
     end
     //
     always@(posedge clk) begin
@@ -110,6 +113,7 @@ module EXSegReg(
                 CSRRdE <= 12'b0;
                 CSROutE <= 32'b0;
                 CSRReadE <= 1'b0;
+                MemReadE <= 1'b0;
                 PCE<=32'b0; 
                 BrNPC<=32'b0; 
                 ImmE<=32'b0;
@@ -136,6 +140,7 @@ module EXSegReg(
                 CSRRdE <= CSRRdD;
                 CSROutE <= CSROutD;
                 CSRReadE <= CSRRead;
+                MemReadE <= MemReadD;  
                 PCE<=PCD; 
                 BrNPC<=JalNPC; 
                 ImmE<=ImmD;

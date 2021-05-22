@@ -127,8 +127,8 @@ always @ (posedge clk or posedge rst) begin     // ?? cache ???
                         end
                     end
         SWAP_IN_OK: begin           // 上一个周期换入成功，这周期将主存读出的line写入cache，并更新tag，置高valid，置低dirty
-                        if(mem_fifo_len < WAY_CNT) begin
-                            for(integer i=0; i<LINE_SIZE; i++) cache_mem[mem_rd_set_addr][(mem_fifo_pos+1)%WAY_CNT][i] <= mem_rd_line[i];
+                        if(mem_fifo_len < WAY_CNT) begin//FIXME:fifo_len
+                            for(integer i=0; i<LINE_SIZE; i++) cache_mem[mem_rd_set_addr][mem_fifo_len][i] <= mem_rd_line[i];
                             way_length[mem_rd_set_addr] <= mem_fifo_len + 1;
                         end
                         else begin

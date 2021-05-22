@@ -54,7 +54,7 @@ module IDSegReg(
             PCD <= clear ? 0: PCF;
     
     wire [31:0] RD_raw;
-    InstructionRam InstructionRamInst (
+    /* InstructionRam InstructionRamInst (
          .clk    (clk),                        //请完善代码
          .addra  (A[31:2]),                        //请完善代码
          .douta  ( RD_raw     ),
@@ -62,7 +62,17 @@ module IDSegReg(
          .addrb  ( A2[31:2]   ),
          .dinb   ( WD2        ),
          .doutb  ( RD2        )
-     );
+     ); */
+
+    InstructionCache InstCacheInst (
+        .clk(clk),
+        .write_en(|WE2),
+        .addr(A[31:2]),
+        .debug_addr(A2[31:2]),
+        .debug_input(WD2),
+        .data(RD_raw),
+        .debug_data(RD2)
+    );
     // Add clear and stall support
     // if chip not enabled, output output last read result
     // else if chip clear, output 0
@@ -75,7 +85,7 @@ module IDSegReg(
     begin
         stall_ff<=~en;
         clear_ff<=clear;
-        RD_old<=RD_raw;
+        RD_old<=RD;
     end    
     assign RD = stall_ff ? RD_old : (clear_ff ? 32'b0 : RD_raw );
 
