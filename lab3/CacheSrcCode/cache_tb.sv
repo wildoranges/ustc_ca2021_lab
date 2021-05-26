@@ -1889,7 +1889,7 @@ always @ (posedge clk or posedge rst)
         end
     end
 
-cache #(
+cache_fifo #(
     .LINE_ADDR_LEN  ( 3             ),
     .SET_ADDR_LEN   ( 2             ),
     .TAG_ADDR_LEN   ( 12            ),
