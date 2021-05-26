@@ -110,7 +110,45 @@ module WBSegReg(
         .doutb  ( RD2            )
     ); */   
 
-    cache DataCacheInst (
+wire we;
+assign we = |WE;
+reg [31:0] miss_cnt;
+reg [31:0] total_cnt;
+reg state;
+
+always@(posedge clk or posedge rst) begin
+    if(rst)begin
+        state <= 0;
+        miss_cnt <= 0;
+    end else begin
+        case(state)
+        1'b0:begin 
+            if(DCacheMiss) begin
+                miss_cnt <= miss_cnt + 1;
+                state <= 1'b1;   
+            end             
+        end
+        1'b1:begin
+            if(!DCacheMiss) begin
+                state <= 1'b0;
+            end
+        end
+        endcase
+    end
+end
+    
+
+always@(posedge clk or posedge rst) begin
+    if(rst)begin
+        total_cnt <= 0;
+    end else begin
+        if((MemReadM || we)&&!DCacheMiss) begin
+            total_cnt <= total_cnt + 1;
+        end
+    end
+end
+
+    cache_fifo DataCacheInst (
         .clk    (clk),             
         .rst    (rst),         
         .miss   (DCacheMiss),
