@@ -10,18 +10,18 @@
 // Description: IF-ID Segment Register
 //////////////////////////////////////////////////////////////////////////////////
 //功能说明
-    //IDSegReg是IF-ID段寄存器，同时包含了一个同步读写的Bram（此处你可以调用我们提供的InstructionRam，
-    //它将会自动综合为block memory，你也可以替代性的调用xilinx的bram ip核）。
-    //同步读memory 相当于 异步读memory 的输出外接D触发器，需要时钟上升沿才能读取数据。
-    //此时如果再通过段寄存器缓存，那么需要两个时钟上升沿才能将数据传递到Ex段
-    //因此在段寄存器模块中调用该同步memory，直接将输出传递到ID段组合逻辑
-    //调用mem模块后输出为RD_raw，通过assign RD = stall_ff ? RD_old : (clear_ff ? 32'b0 : RD_raw );
-    //从而实现RD段寄存器stall和clear功能
+    //IDSegReg是IF-ID段寄存器，同时包含了�?个同步读写的Bram（此处你可以调用我们提供的InstructionRam�?
+    //它将会自动综合为block memory，你也可以替代�?�的调用xilinx的bram ip核）�?
+    //同步读memory 相当�? 异步读memory 的输出外接D触发器，�?要时钟上升沿才能读取数据�?
+    //此时如果再�?�过段寄存器缓存，那么需要两个时钟上升沿才能将数据传递到Ex�?
+    //因此在段寄存器模块中调用该同步memory，直接将输出传�?�到ID段组合�?�辑
+    //调用mem模块后输出为RD_raw，�?�过assign RD = stall_ff ? RD_old : (clear_ff ? 32'b0 : RD_raw );
+    //从�?�实现RD段寄存器stall和clear功能
 //实验要求  
-    //补全IDSegReg模块，需补全的片段截取如下
+    //补全IDSegReg模块，需补全的片段截取如�?
     //InstructionRam InstructionRamInst (
-    //     .clk    (),                        //请完善代码
-    //     .addra  (),                        //请完善代码
+    //     .clk    (),                        //请完善代�?
+    //     .addra  (),                        //请完善代�?
     //     .douta  ( RD_raw     ),
     //     .web    ( |WE2       ),
     //     .addrb  ( A2[31:2]   ),
@@ -55,8 +55,8 @@ module IDSegReg(
     
     wire [31:0] RD_raw;
     /* InstructionRam InstructionRamInst (
-         .clk    (clk),                        //请完善代码
-         .addra  (A[31:2]),                        //请完善代码
+         .clk    (clk),                        //请完善代�?
+         .addra  (A[31:2]),                        //请完善代�?
          .douta  ( RD_raw     ),
          .web    ( |WE2       ),
          .addrb  ( A2[31:2]   ),

@@ -1,4 +1,4 @@
-// asm file name: QuickSort.S
+// asm file name: .\QuickSort.S
 module InstructionCache(
     input wire clk,
     input wire write_en,
@@ -19,7 +19,7 @@ module InstructionCache(
     initial begin
         data = 32'h0;
         debug_data = 32'h0;
-        inst_cache[       0] = 32'h01004693;
+        inst_cache[       0] = 32'h10004693;
         inst_cache[       1] = 32'h00001137;
         inst_cache[       2] = 32'h00004533;
         inst_cache[       3] = 32'h000045b3;
