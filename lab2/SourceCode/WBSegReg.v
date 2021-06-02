@@ -10,21 +10,21 @@
 // Description: Write Back Segment Register
 //////////////////////////////////////////////////////////////////////////////////
 //功能说明
-    //WBSegReg是Write Back段寄存器�?
+    //WBSegReg是Write Back段寄存器�?
     //类似于IDSegReg.V中对Bram的调用和拓展，它同时包含了一个同步读写的Bram
-    //（此处你可以调用我们提供的InstructionRam，它将会自动综合为block memory，你也可以替代�?�的调用xilinx的bram ip核）�?
-    //同步读memory 相当�? 异步读memory 的输出外接D触发器，�?要时钟上升沿才能读取数据�?
-    //此时如果再�?�过段寄存器缓存，那么需要两个时钟上升沿才能将数据传递到Ex�?
-    //因此在段寄存器模块中调用该同步memory，直接将输出传�?�到WB段组合�?�辑
-    //调用mem模块后输出为RD_raw，�?�过assign RD = stall_ff ? RD_old : (clear_ff ? 32'b0 : RD_raw );
-    //从�?�实现RD段寄存器stall和clear功能
+    //（此处你可以调用我们提供的InstructionRam，它将会自动综合为block memory，你也可以替代�?�的调用xilinx的bram ip核）�?
+    //同步读memory 相当�? 异步读memory 的输出外接D触发器，�?要时钟上升沿才能读取数据�?
+    //此时如果再�?�过段寄存器缓存，那么需要两个时钟上升沿才能将数据传递到Ex�?
+    //因此在段寄存器模块中调用该同步memory，直接将输出传�?�到WB段组合�?�辑
+    //调用mem模块后输出为RD_raw，�?�过assign RD = stall_ff ? RD_old : (clear_ff ? 32'b0 : RD_raw );
+    //从�?�实现RD段寄存器stall和clear功能
 //实验要求  
-    //你需要补全WBSegReg模块，需补全的片段截取如�?
+    //你需要补全WBSegReg模块，需补全的片段截取如�?
     //DataRam DataRamInst (
-    //    .clk    (???),                      //请完善代�?
-    //    .wea    (???),                      //请完善代�?
-    //    .addra  (???),                      //请完善代�?
-    //    .dina   (???),                      //请完善代�?
+    //    .clk    (???),                      //请完善代�?
+    //    .wea    (???),                      //请完善代�?
+    //    .addra  (???),                      //请完善代�?
+    //    .dina   (???),                      //请完善代�?
     //    .douta  ( RD_raw         ),
     //    .web    ( WE2            ),
     //    .addrb  ( A2[31:2]       ),
@@ -34,7 +34,7 @@
 //注意事项
     //输入到DataRam的addra是字地址，一个字32bit
     //请配合DataExt模块实现非字对齐字节load
-    //请�?�过补全代码实现非字对齐store
+    //请�?�过补全代码实现非字对齐store
 
 
 module WBSegReg(
@@ -99,17 +99,17 @@ module WBSegReg(
 
     wire [31:0] RD_raw;
     /* DataRam DataRamInst (
-        .clk    (clk),                      //请完善代�?
-        .wea    (WE << A[1:0]),                      //请完善代�?
-        .addra  (A[31:2]),                      //请完善代�?
-        .dina   (WD << {A[1:0],3'b0}),                      //请完善代�?
+        .clk    (clk),                      //请完善代�?
+        .wea    (WE << A[1:0]),                      //请完善代�?
+        .addra  (A[31:2]),                      //请完善代�?
+        .dina   (WD << {A[1:0],3'b0}),                      //请完善代�?
         .douta  ( RD_raw         ),
         .web    ( WE2            ),
         .addrb  ( A2[31:2]       ),
         .dinb   ( WD2            ),
         .doutb  ( RD2            )
-    ); */   
-
+    ); 
+    assign DCacheMiss = 1'b0; */
 wire we;
 assign we = |WE;
 reg [31:0] miss_cnt;
@@ -148,11 +148,11 @@ always@(posedge clk or posedge rst) begin
     end
 end
 
-    cache_lru DataCacheInst (
+    cache_fifo DataCacheInst (
         .clk    (clk),             
         .rst    (rst),         
         .miss   (DCacheMiss),
-        .addr   (A[31:0]),//TODO:ADD MEMREAD
+        .addr   (A[31:0]),
         .rd_req (MemReadM),
         .rd_data (RD_raw),
         .wr_req (|WE),

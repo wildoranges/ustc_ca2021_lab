@@ -114,6 +114,9 @@ module RV32Core(
     wire [31:0] CSROperand1;
     wire [31:0] CSROperand2;
     wire DCacheMiss;
+    wire PCF_SEL;
+    wire [31:0] PCF_PRE;
+    wire BTB_FLUSH;
     //wire ICacheMiss;
     //wire values assignments
     assign {Funct7D, Rs2D, Rs1D, Funct3D, RdD, OpCodeD} = Instr;
@@ -131,6 +134,9 @@ module RV32Core(
     // ---------------------------------------------
     // PC-IF
     // ---------------------------------------------
+    wire BTB_PREFAIL;
+    wire BTB_FILL;
+    
     NPC_Generator NPC_Generator1(
         .PCF(PCF),
         .JalrTarget(AluOutE), 
@@ -139,7 +145,12 @@ module RV32Core(
         .BranchE(BranchE),
         .JalD(JalD),
         .JalrE(JalrE),
-        .PC_In(PC_In)
+        .PC_In(PC_In),
+        .PCF_SEL(PCF_SEL),
+        .PCF_PRE(PCF_PRE),
+        .PCE(PCE),
+        .BTB_FILL(BTB_FILL),
+        .BTB_PREFAIL(BTB_PREFAIL)
     );
 
     IFSegReg IFSegReg1(
@@ -150,6 +161,20 @@ module RV32Core(
         .PCF(PCF)
     );
 
+    BTB BTB1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .PCF(PCF),
+        .PCE(PCE),
+        .BranchE(BranchE),
+        .BranchTarget(BrNPC),
+        .Stall(StallF|StallD|StallE),
+        .PC_PRE(PCF_PRE),
+        .PC_SEL(PCF_SEL),
+        .btb_flush(BTB_FLUSH),
+        .btb_prefail(BTB_PREFAIL),
+        .btb_fill(BTB_FILL)
+    );
     // ---------------------------------------------
     // ID stage
     // ---------------------------------------------
@@ -422,7 +447,8 @@ module RV32Core(
         .CSRWriteM(CSRWriteM),
         .CSRWriteW(CSRWriteW),
         .CSRForwardE(CSRForwardE),
-        .CSRReadE(CSRReadE)
+        .CSRReadE(CSRReadE),
+        .BTB_FLUSH(BTB_FLUSH)
     	);    
     	         
 endmodule

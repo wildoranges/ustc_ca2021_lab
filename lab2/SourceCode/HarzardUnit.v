@@ -40,6 +40,7 @@ module HarzardUnit(
     input wire [11:0] CSRRdM,
     input wire [11:0] CSRRdW,
     input wire CSRReadE,CSRWriteE,CSRWriteM,CSRWriteW,
+    input wire BTB_FLUSH,
     output reg [1:0] CSRForwardE
 );
 wire rs1hitm ;
@@ -65,7 +66,7 @@ always@(*) begin //checking jump and hazard
         {StallF, StallD, StallE, StallM, StallW} <= 5'b11111;
     end
     else begin
-    if(BranchE)begin
+    if(BTB_FLUSH)begin
         {FlushF, FlushD, FlushE, FlushM, FlushW} <= 5'b01100;
         {StallF, StallD, StallE, StallM, StallW} <= 5'b00000;
     end
