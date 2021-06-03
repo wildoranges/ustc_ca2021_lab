@@ -98,7 +98,7 @@ module WBSegReg(
         end
 
     wire [31:0] RD_raw;
-    /* DataRam DataRamInst (
+    /* DataRam DataCacheInst (
         .clk    (clk),                      //请完善代�?
         .wea    (WE << A[1:0]),                      //请完善代�?
         .addra  (A[31:2]),                      //请完善代�?

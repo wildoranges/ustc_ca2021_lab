@@ -136,6 +136,7 @@ module RV32Core(
     // ---------------------------------------------
     wire BTB_PREFAIL;
     wire BTB_FILL;
+    wire [31:0] BHT_PCE;
     
     NPC_Generator NPC_Generator1(
         .PCF(PCF),
@@ -148,7 +149,7 @@ module RV32Core(
         .PC_In(PC_In),
         .PCF_SEL(PCF_SEL),
         .PCF_PRE(PCF_PRE),
-        .PCE(PCE),
+        .PCE(BHT_PCE),
         .BTB_FILL(BTB_FILL),
         .BTB_PREFAIL(BTB_PREFAIL)
     );
@@ -161,20 +162,60 @@ module RV32Core(
         .PCF(PCF)
     );
 
-    BTB BTB1(
+
+    /* BTB BTB1(
         .clk(CPU_CLK),
         .rst(CPU_RST),
         .PCF(PCF),
-        .PCE(PCE),
+        // .PCE(PCE),
+        .BranchTypeE(BranchTypeE),
         .BranchE(BranchE),
         .BranchTarget(BrNPC),
         .Stall(StallF|StallD|StallE),
+        .Flush(FlushD|FlushE),
         .PC_PRE(PCF_PRE),
         .PC_SEL(PCF_SEL),
         .btb_flush(BTB_FLUSH),
         .btb_prefail(BTB_PREFAIL),
-        .btb_fill(BTB_FILL)
+        .btb_fill(BTB_FILL),
+        .PCE(BHT_PCE)
+    ); */
+
+    BHT BHT1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .PCF(PCF),
+        //.PCE(PCE),
+        .BranchTypeE(BranchTypeE),
+        .BranchE(BranchE),
+        .BranchTarget(BrNPC),
+        .Stall(StallF|StallD|StallE),
+        .Flush(FlushD|FlushE),
+        .PC_PRE(PCF_PRE),
+        .PC_SEL(PCF_SEL),
+        .btb_flush(BTB_FLUSH),
+        .btb_prefail(BTB_PREFAIL),
+        .btb_fill(BTB_FILL),
+        .PCE(BHT_PCE)
     );
+
+    /* PRED PRED1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .PCF(PCF),
+        //.PCE(PCE),
+        .BranchTypeE(BranchTypeE),
+        .BranchE(BranchE),
+        .BranchTarget(BrNPC),
+        .Stall(StallF|StallD|StallE),
+        .Flush(FlushD|FlushE),
+        .PC_PRE(PCF_PRE),
+        .PC_SEL(PCF_SEL),
+        .flush(BTB_FLUSH),
+        .prefail(BTB_PREFAIL),
+        .fill(BTB_FILL),
+        .PCE(BHT_PCE)
+    ); */
     // ---------------------------------------------
     // ID stage
     // ---------------------------------------------
