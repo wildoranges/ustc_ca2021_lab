@@ -9,8 +9,10 @@ input wire [31:0] PCF,
 input wire [2:0] BranchTypeE,
 input wire BranchE,//FIXME:BRANCH TYPE
 input wire [31:0] BranchTarget,
-input wire Stall,
-input wire Flush,
+input wire StallD,
+input wire StallE,
+input wire FlushD,
+input wire FlushE,
 output wire [31:0] PC_PRE,
 output wire PC_SEL,
 output wire btb_flush,
@@ -59,13 +61,17 @@ always@(posedge clk or posedge rst)begin
         EXhit <= 0;
         PCD <= 0;
         PCE <= 0;
-    end else if(!Stall)begin
-        IDstat <= Flush?0:IFstat;
-        IDhit <= Flush?0:btb_hit;
-        EXstat <= Flush?0:IDstat;
-        EXhit <= Flush?0:IDhit;
-        PCD <= PCF;
-        PCE <= PCD;
+    end else begin
+    if(!StallD)begin
+        IDstat <= FlushD?0:IFstat;
+        IDhit <= FlushD?0:btb_hit;
+        PCD <= FlushD?0:PCF;
+    end
+    if(!StallE)begin
+        EXstat <= FlushE?0:IDstat;
+        EXhit <= FlushE?0:IDhit;
+        PCE <= FlushE?0:PCD;
+    end
     end
 end
 
@@ -88,7 +94,7 @@ always @(negedge clk or posedge rst)begin
             btb_stat[i] <= 0;
         end
     end
-    else if(!Stall)begin
+    else if(!StallE&&!FlushE)begin
         if(EXhit)begin//TODO:finish this
             btb_stat[pce_set] <= next_stat;
         end else begin

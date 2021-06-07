@@ -9,8 +9,10 @@ input wire [31:0] PCF,
 input wire [2:0] BranchTypeE,
 input wire BranchE,
 input wire [31:0] BranchTarget,
-input wire Stall,
-input wire Flush,
+input wire StallD,
+input wire StallE,
+input wire FlushD,
+input wire FlushE,
 output wire [31:0] PC_PRE,
 output wire PC_SEL,
 output wire flush,
@@ -32,8 +34,10 @@ BTB #(SET_ADDR_LEN)BTB1(
     .BranchE(BranchE),
     .BranchTypeE(BranchTypeE),
     .BranchTarget(BranchTarget),
-    .Stall(Stall),//TODO:UPDATE
-    .Flush(Flush),
+    .StallD(StallD),//TODO:UPDATE
+    .StallE(StallE),
+    .FlushD(FlushD),
+    .FlushE(FlushE),
     .PC_PRE(b_pcpre),
     .PC_SEL(b_pcsel),
     .btb_flush(b_flush),
@@ -82,13 +86,17 @@ always @(posedge clk or posedge rst)begin//FIXME:signal passing?
         EXhit <= 0;
         IDPretaken <= 0;
         EXPretaken <= 0;
-    end else if(!Stall)begin
-        IDstat <= Flush?0:IFstat;
-        IDhit <= Flush?0:bht_hit;
-        EXstat <= Flush?0:IDstat;
-        EXhit <= Flush?0:IDhit;
-        IDPretaken <= Flush?0:pre_taken;
-        EXPretaken <= Flush?0:IDPretaken;
+    end else begin
+        if(!StallD)begin
+        IDstat <= FlushD?0:IFstat;
+        IDhit <= FlushD?0:bht_hit;
+        IDPretaken <= FlushD?0:pre_taken;
+        end
+        if(!StallE)begin
+        EXstat <= FlushE?0:IDstat;
+        EXhit <= FlushE?0:IDhit;
+        EXPretaken <= FlushE?0:IDPretaken;
+        end
     end
 end
 
@@ -131,7 +139,7 @@ always @(negedge clk or posedge rst)begin
             bht_stat[i] <= 0;
         end
     end
-    else if(!Stall)begin
+    else if(!StallE&&!FlushE)begin
         if(EXhit/* &&(|BranchTypeE) */)begin
             bht_stat[pce_set] <= next_stat;
         end else begin

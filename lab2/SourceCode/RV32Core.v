@@ -162,17 +162,46 @@ module RV32Core(
         .PCF(PCF)
     );
 
+    //NO PREDICTION:
+    
+    /* assign PCF_PRE = 0;
+    assign PCF_SEL = 0;
+    assign BTB_FLUSH = BranchE;
+    assign BTB_PREFAIL = 0;
+    assign BTB_FILL = 1;
+    assign BHT_PCE = PCE; */
+   
 
     /* BTB BTB1(
         .clk(CPU_CLK),
         .rst(CPU_RST),
         .PCF(PCF),
-        // .PCE(PCE),
         .BranchTypeE(BranchTypeE),
         .BranchE(BranchE),
         .BranchTarget(BrNPC),
-        .Stall(StallF|StallD|StallE),
-        .Flush(FlushD|FlushE),
+        .StallD(StallD),
+        .StallE(StallE),
+        .FlushD(FlushD),
+        .FlushE(FlushE),
+        .PC_PRE(PCF_PRE),
+        .PC_SEL(PCF_SEL),
+        .btb_flush(BTB_FLUSH),
+        .btb_prefail(BTB_PREFAIL),
+        .btb_fill(BTB_FILL),
+        .PCE(BHT_PCE)
+    );  */
+
+    /* BHT BHT1(
+        .clk(CPU_CLK),
+        .rst(CPU_RST),
+        .PCF(PCF),
+        .BranchTypeE(BranchTypeE),
+        .BranchE(BranchE),
+        .BranchTarget(BrNPC),
+        .StallD(StallD),
+        .StallE(StallE),
+        .FlushD(FlushD),
+        .FlushE(FlushE),
         .PC_PRE(PCF_PRE),
         .PC_SEL(PCF_SEL),
         .btb_flush(BTB_FLUSH),
@@ -181,41 +210,24 @@ module RV32Core(
         .PCE(BHT_PCE)
     ); */
 
-    BHT BHT1(
+    PRED PRED1(
         .clk(CPU_CLK),
         .rst(CPU_RST),
         .PCF(PCF),
-        //.PCE(PCE),
         .BranchTypeE(BranchTypeE),
         .BranchE(BranchE),
         .BranchTarget(BrNPC),
-        .Stall(StallF|StallD|StallE),
-        .Flush(FlushD|FlushE),
-        .PC_PRE(PCF_PRE),
-        .PC_SEL(PCF_SEL),
-        .btb_flush(BTB_FLUSH),
-        .btb_prefail(BTB_PREFAIL),
-        .btb_fill(BTB_FILL),
-        .PCE(BHT_PCE)
-    );
-
-    /* PRED PRED1(
-        .clk(CPU_CLK),
-        .rst(CPU_RST),
-        .PCF(PCF),
-        //.PCE(PCE),
-        .BranchTypeE(BranchTypeE),
-        .BranchE(BranchE),
-        .BranchTarget(BrNPC),
-        .Stall(StallF|StallD|StallE),
-        .Flush(FlushD|FlushE),
+        .StallD(StallD),
+        .StallE(StallE),
+        .FlushD(FlushD),
+        .FlushE(FlushE),
         .PC_PRE(PCF_PRE),
         .PC_SEL(PCF_SEL),
         .flush(BTB_FLUSH),
         .prefail(BTB_PREFAIL),
         .fill(BTB_FILL),
         .PCE(BHT_PCE)
-    ); */
+    ); 
     // ---------------------------------------------
     // ID stage
     // ---------------------------------------------
