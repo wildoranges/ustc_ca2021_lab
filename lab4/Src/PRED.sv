@@ -139,7 +139,7 @@ always @(negedge clk or posedge rst)begin
             bht_stat[i] <= 0;
         end
     end
-    else if(!StallE&&!FlushE)begin
+    else if(!StallE/* &&!FlushE */)begin
         if(EXhit/* &&(|BranchTypeE) */)begin
             bht_stat[pce_set] <= next_stat;
         end else begin

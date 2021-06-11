@@ -98,7 +98,7 @@ module WBSegReg(
         end
 
     wire [31:0] RD_raw;
-    /* DataRam DataCacheInst (
+    DataRam DataCacheInst (
         .clk    (clk),                      //请完善代�?
         .wea    (WE << A[1:0]),                      //请完善代�?
         .addra  (A[31:2]),                      //请完善代�?
@@ -109,7 +109,7 @@ module WBSegReg(
         .dinb   ( WD2            ),
         .doutb  ( RD2            )
     ); 
-    assign DCacheMiss = 1'b0; */
+    assign DCacheMiss = 1'b0; 
 wire we;
 assign we = |WE;
 reg [31:0] miss_cnt;
@@ -148,7 +148,7 @@ always@(posedge clk or posedge rst) begin
     end
 end
 
-    cache_fifo DataCacheInst (
+    /* cache_fifo DataCacheInst (
         .clk    (clk),             
         .rst    (rst),         
         .miss   (DCacheMiss),
@@ -157,7 +157,7 @@ end
         .rd_data (RD_raw),
         .wr_req (|WE),
         .wr_data (WD)
-    ); 
+    );  */
 
     // Add clear and stall support
     // if chip not enabled, output output last read result

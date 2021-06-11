@@ -63,7 +63,7 @@ always@(posedge clk or posedge rst)begin
         PCE <= 0;
     end else begin
     if(!StallD)begin
-        IDstat <= FlushD?0:IFstat;
+        IDstat <= FlushD?0:PC_SEL;
         IDhit <= FlushD?0:btb_hit;
         PCD <= FlushD?0:PCF;
     end
@@ -76,8 +76,8 @@ always@(posedge clk or posedge rst)begin
 end
 
 
-assign btb_prefail = EXstat && (!BranchE) &&EXhit;
-assign btb_fill = ((!EXstat) && BranchE && EXhit) || (!EXhit && BranchE);
+assign btb_prefail = EXstat && (!BranchE);
+assign btb_fill = (!EXstat) && BranchE;
 assign btb_flush = btb_prefail | btb_fill;
 
 wire next_stat;
@@ -94,14 +94,14 @@ always @(negedge clk or posedge rst)begin
             btb_stat[i] <= 0;
         end
     end
-    else if(!StallE&&!FlushE)begin
-        if(EXhit)begin//TODO:finish this
-            btb_stat[pce_set] <= next_stat;
+    else if(!StallE/* &&!(FlushE&&!btb_flush) */)begin
+        if(btb_prefail)begin//TODO:finish this
+            btb_stat[pce_set] <= 0;
         end else begin
-            if(|BranchTypeE)begin
+            if(btb_fill)begin
                 btb_tags[pce_set] <= pce_tag;
                 btb_pred[pce_set] <= BranchTarget;
-                btb_stat[pce_set] <= init_stat; 
+                btb_stat[pce_set] <= 1; 
             end
         end
     end

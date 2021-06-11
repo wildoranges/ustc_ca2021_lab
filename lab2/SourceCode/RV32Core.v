@@ -503,6 +503,28 @@ module RV32Core(
         .CSRReadE(CSRReadE),
         .BTB_FLUSH(BTB_FLUSH)
     	);    
+
+    reg [31:0] total_br_cnt;
+    reg [31:0] err_br_cnt;
+    always @(negedge CPU_CLK or posedge CPU_RST) begin
+        if(CPU_RST)begin
+            total_br_cnt <= 0;
+        end else /* if(!StallE&&!FlushE) */begin
+            if(|BranchTypeE)begin
+                total_br_cnt <= total_br_cnt + 1;
+            end
+        end
+    end
+
+    always @(negedge CPU_CLK or posedge CPU_RST) begin
+        if(CPU_RST)begin
+            err_br_cnt <= 0;
+        end else /* if(!StallE) */begin
+            if(BTB_FLUSH)begin
+                err_br_cnt <= err_br_cnt + 1;
+            end
+        end
+    end
     	         
 endmodule
 

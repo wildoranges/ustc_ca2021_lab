@@ -4,7 +4,7 @@ module cache_fifo #(
     parameter  LINE_ADDR_LEN = 3, // line内地�??????长度，决定了每个line具有2^3个word
     parameter  SET_ADDR_LEN  = 3, // 组地�??????长度，决定了�??????共有2^3=8�??????
     parameter  TAG_ADDR_LEN  = 6, // tag长度
-    parameter  WAY_CNT       = 1  // 组相连度，决定了每组中有多少路line，这里是直接映射型cache，因此该参数没用�??????
+    parameter  WAY_CNT       = 4  // 组相连度，决定了每组中有多少路line，这里是直接映射型cache，因此该参数没用�??????
 )(
     input  clk, rst,
     output miss,               // 对CPU发出的miss信号
