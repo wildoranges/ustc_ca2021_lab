@@ -59,7 +59,7 @@ end
 
 ### BHT
 
-将BTB接入BHT。当两者均预测taken才预测taken。在BHT中维持一个2-BIT的状态位。
+将BTB接入BHT。在BHT中维持一个2-BIT的状态位。当状态为10或11时BHT预测taken。当BTB,BHT两者均预测taken才预测taken。
 
 ```verilog
 BTB #(SET_ADDR_LEN)BTB1(
@@ -279,3 +279,12 @@ BHT:
 ## 实验总结
 
 熟悉了BTB和BHT，理解了分支预测的原理。分析了不同预测策略在不同场景的表现。
+
+## 附注:
+附件中包含的代码说明
+`BTB.sv`：BTB源代码
+`HazardUnit.v`：修改过的HazardUnit源代码
+`NPC_Generator.v`：修改过的NPC_generator源代码
+`PRED.sv`:BHT源代码
+`RV32Core.v`:修改过的RV32Core源代码
+本次实验只改动了上述代码
